@@ -47,7 +47,7 @@ Phase 1 established routing and docs only. Phase 2 must replace those placeholde
 ## Acceptance Criteria
 - current work is on `feat/phase2-cli-hardening`
 - Phase 2 planning artifacts exist in `.omx/plans/`
-- `./dev-env` core commands perform real work instead of placeholder output
+- `./envkit` core commands perform real work instead of placeholder output
 - `bootstrap --dry-run --no-packages` succeeds as a non-destructive smoke path
 - `configure` no longer injects legacy `clear`, `python3 ~/.bg.py`, or `ls` by default
 - named profiles can drive plugin/theme defaults without surprising shell startup behavior

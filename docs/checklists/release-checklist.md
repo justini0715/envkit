@@ -3,12 +3,12 @@
 ## Core local verification
 - [ ] `make lint`
 - [ ] `make format-check`
-- [ ] `./dev-env test`
+- [ ] `./envkit test`
 - [ ] `./tests/phase3-packaging-smoke.sh`
 - [ ] `make verify`
 
 ## Release artifact review
-- [ ] inspect `dist/deb/dev-env_<version>_all.deb`
+- [ ] inspect `dist/deb/envkit_<version>_all.deb`
 - [ ] inspect package metadata with `dpkg-deb -I`
 - [ ] inspect package contents with `dpkg-deb -c`
 - [ ] confirm local install path docs are current

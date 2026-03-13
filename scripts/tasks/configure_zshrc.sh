@@ -4,11 +4,11 @@ set -euo pipefail
 ZSHRC=${ZSHRC:-"$HOME/.zshrc"}
 ZSH_DIR=${ZSH_DIR:-"$HOME/.oh-my-zsh"}
 ZSH_CONF_DIR=${ZSH_CONF_DIR:-"$HOME/.config/zsh/conf.d"}
-ZSH_CONF_FILE=${ZSH_CONF_FILE:-"10-dev-env-ohmyzsh.zsh"}
+ZSH_CONF_FILE=${ZSH_CONF_FILE:-"10-envkit-ohmyzsh.zsh"}
 PLUGINS=${PLUGINS:-"git"}
 PLUGINS_FILE=${PLUGINS_FILE:-""}
 DEFAULT_THEME=${DEFAULT_THEME:-"robbyrussell"}
-USER_CONF_TARGET=${USER_CONF_TARGET:-"$ZSH_CONF_DIR/30-dev-env-user.zsh"}
+USER_CONF_TARGET=${USER_CONF_TARGET:-"$ZSH_CONF_DIR/30-envkit-user.zsh"}
 THEME_FILE=${THEME_FILE:-""}
 
 TASK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -17,8 +17,8 @@ SCRIPT_DIR="$(cd "$TASK_DIR/.." && pwd)"
 source "$SCRIPT_DIR/lib.sh"
 
 MANAGED_FILE="$ZSH_CONF_DIR/$ZSH_CONF_FILE"
-START_MARKER="# >>> dev-env zsh bootstrap >>>"
-END_MARKER="# <<< dev-env zsh bootstrap <<<"
+START_MARKER="# >>> envkit zsh bootstrap >>>"
+END_MARKER="# <<< envkit zsh bootstrap <<<"
 
 resolved_plugins="$(load_plugins "$PLUGINS" "$PLUGINS_FILE")"
 resolved_theme="$(resolve_theme "$DEFAULT_THEME" "$THEME_FILE")"
@@ -31,8 +31,8 @@ output_tmp="$(mktemp)"
 trap 'rm -f "$managed_tmp" "$existing_tmp" "$output_tmp"' EXIT
 
 cat > "$managed_tmp" << EOF_MANAGED
-# Managed by dev-env. Re-run 'dev-env configure' to update.
-# Profile: ${DEV_ENV_PROFILE:-minimal}
+# Managed by envkit. Re-run 'envkit configure' to update.
+# Profile: ${ENVKIT_PROFILE:-minimal}
 $theme_line
 $plugins_line
 EOF_MANAGED
@@ -89,10 +89,10 @@ awk \
   BEGIN {
     block[1] = start
     block[2] = "if [ -d \"" conf_dir "\" ]; then"
-    block[3] = "  for _dev_env_conf in \"" conf_dir "\"/*.zsh(N); do"
-    block[4] = "    [ -r \"$_dev_env_conf\" ] && source \"$_dev_env_conf\""
+    block[3] = "  for _envkit_conf in \"" conf_dir "\"/*.zsh(N); do"
+    block[4] = "    [ -r \"$_envkit_conf\" ] && source \"$_envkit_conf\""
     block[5] = "  done"
-    block[6] = "  unset _dev_env_conf"
+    block[6] = "  unset _envkit_conf"
     block[7] = "fi"
     block_len = 7
 
@@ -132,8 +132,8 @@ sync_file_with_backup "$managed_tmp" "$MANAGED_FILE"
 sync_file_with_backup "$output_tmp" "$ZSHRC"
 
 if [ -n "${USER_REQUEST_TEXT+x}" ] || [ -f "${USER_REQUEST_FILE:-}" ]; then
-  DEV_ENV_DRY_RUN="${DEV_ENV_DRY_RUN:-0}" \
-    DEV_ENV_PROFILE="${DEV_ENV_PROFILE:-minimal}" \
+  ENVKIT_DRY_RUN="${ENVKIT_DRY_RUN:-0}" \
+    ENVKIT_PROFILE="${ENVKIT_PROFILE:-minimal}" \
     USER_CONF_TARGET="$USER_CONF_TARGET" \
     PLUGINS_FILE="$PLUGINS_FILE" \
     THEME_FILE="$THEME_FILE" \

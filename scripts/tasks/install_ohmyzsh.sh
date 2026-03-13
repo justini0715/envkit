@@ -20,7 +20,7 @@ if is_dry_run; then
 fi
 
 if ! command -v curl > /dev/null 2>&1; then
-  die "curl not found. Run 'dev-env packages' first."
+  die "curl not found. Run 'envkit packages' first."
 fi
 
 tmp_installer="$(mktemp)"

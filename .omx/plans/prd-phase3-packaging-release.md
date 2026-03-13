@@ -5,7 +5,7 @@
 - Branch: `feat/phase3-packaging-release`
 
 ## Objective
-Make `dev-env` releaseable as a distributable artifact by adding Debian packaging, package smoke verification, a coherent local install path, and release/APT publication documentation/workflows without performing live publishing.
+Make `envkit` releaseable as a distributable artifact by adding Debian packaging, package smoke verification, a coherent local install path, and release/APT publication documentation/workflows without performing live publishing.
 
 ## In Scope
 - `.deb` packaging scripts adapted to the standalone repo layout

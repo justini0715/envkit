@@ -14,7 +14,7 @@ TASKS_DIR="$SCRIPT_DIR/tasks"
 source "$SCRIPT_DIR/lib.sh"
 
 has_error=0
-profile_name="$(resolve_profile "${DEV_ENV_PROFILE:-minimal}")"
+profile_name="$(resolve_profile "${ENVKIT_PROFILE:-minimal}")"
 resolved_theme="$(resolve_theme 'robbyrussell' "$THEME_FILE")"
 resolved_plugins="$(load_plugins 'git' "$PLUGINS_FILE")"
 
@@ -115,7 +115,7 @@ fi
 
 echo
 echo '[doctor] verify task'
-if ! DEV_ENV_PROFILE="$profile_name" "$TASKS_DIR/verify.sh"; then
+if ! ENVKIT_PROFILE="$profile_name" "$TASKS_DIR/verify.sh"; then
   has_error=1
 fi
 

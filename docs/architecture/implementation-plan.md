@@ -1,9 +1,9 @@
-# dev-env Implementation Plan
+# envkit Implementation Plan
 
 ## Project Summary
-- Goal: rebuild `dev-env` as a standalone, releaseable Debian/Ubuntu zsh bootstrap CLI.
+- Goal: rebuild `envkit` as a standalone, releaseable Debian/Ubuntu zsh bootstrap CLI.
 - Brownfield reference: `/home/iostream/Desktop/dev-env`
-- Target repo: `/home/iostream/autopilot-test`
+- Target repo: `/home/iostream/envkit`
 
 ## Current Phase
 - Phase 4 — Hardening and Polish
@@ -62,18 +62,18 @@
 - [x] final end-to-end verification evidence recorded
 
 ## Verification Commands Run
-1. `bash -n dev-env scripts/*.sh scripts/tasks/*.sh packaging/*.sh install.sh tests/*.sh tests/smoke/*.sh`
+1. `bash -n envkit scripts/*.sh scripts/tasks/*.sh packaging/*.sh install.sh tests/*.sh tests/smoke/*.sh`
 2. `make lint`
 3. `make format-check`
-4. `./dev-env test`
+4. `./envkit test`
 5. `./tests/phase3-packaging-smoke.sh`
 6. `make verify`
 
 ## Verification Results
-- `bash -n dev-env scripts/*.sh scripts/tasks/*.sh packaging/*.sh install.sh tests/*.sh tests/smoke/*.sh` — passed.
+- `bash -n envkit scripts/*.sh scripts/tasks/*.sh packaging/*.sh install.sh tests/*.sh tests/smoke/*.sh` — passed.
 - `make lint` — passed using locally bootstrapped ShellCheck `v0.11.0`.
 - `make format-check` — passed using locally bootstrapped shfmt `v3.11.0`.
-- `./dev-env test` — passed; foundation smoke, Phase 4 CLI smoke, and temp-environment integration all succeeded.
+- `./envkit test` — passed; foundation smoke, Phase 4 CLI smoke, and temp-environment integration all succeeded.
 - `./tests/phase3-packaging-smoke.sh` — passed; `.deb` build, unpacked wrapper smoke, local install smoke, and APT repo smoke all succeeded.
 - `make verify` — passed; re-ran lint, format-check, CLI/integration tests, and packaging smoke as a single release-preflight gate.
 

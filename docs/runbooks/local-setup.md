@@ -1,10 +1,10 @@
 # Local Setup Runbook
 
 ## Purpose
-Describe the supported standalone `dev-env` workflow through Phase 4.
+Describe the supported standalone `envkit` workflow through Phase 4.
 
 ## Preconditions
-- work from `/home/iostream/autopilot-test`
+- work from `/home/iostream/envkit`
 - stay on `feat/phase4-hardening`
 - treat `/home/iostream/Desktop/dev-env` as brownfield-reference input only
 
@@ -12,8 +12,8 @@ Describe the supported standalone `dev-env` workflow through Phase 4.
 ```bash
 make lint
 make format-check
-./dev-env bootstrap --dry-run --no-packages --profile minimal
-./dev-env test
+./envkit bootstrap --dry-run --no-packages --profile minimal
+./envkit test
 make package-deb VERSION=0.3.0-test
 ./tests/phase3-packaging-smoke.sh
 make verify
@@ -29,7 +29,7 @@ make verify
 To restore your own interactive startup commands without making them global defaults:
 
 ```bash
-./dev-env configure --profile personal
+./envkit configure --profile personal
 ```
 
 This uses `config/user/personal-request.txt` and writes the commands into the managed user drop-in instead of forcing them into the default bootstrap path.

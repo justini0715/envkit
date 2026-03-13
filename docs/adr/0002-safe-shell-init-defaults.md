@@ -11,7 +11,7 @@ The brownfield reference shipped startup resource behavior that effectively ran 
 Phase 2 removes those behaviors from the default configure path.
 
 Instead:
-- zsh bootstrap management only ensures the managed dev-env block and drop-in loading exist
+- zsh bootstrap management only ensures the managed envkit block and drop-in loading exist
 - profiles control explicit plugin/theme defaults
 - user-request `init:` commands remain opt-in and are written only when explicitly requested
 - resources remain reserved for later explicit/opt-in behavior, not silent startup mutation

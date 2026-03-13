@@ -14,7 +14,7 @@ DEFAULT_REQUEST_FILE="$ROOT_DIR/config/user/request.txt"
 
 usage() {
   cat << 'EOF_USAGE'
-Usage: dev-env <command> [options]
+Usage: envkit <command> [options]
 
 Commands:
   bootstrap [--profile <name>] [--dry-run] [--set-default-shell] [--no-packages]
@@ -40,7 +40,7 @@ run_task() {
   local resolved_request_file=""
   shift || true
 
-  resolved_profile="${DEV_ENV_PROFILE:-$DEFAULT_PROFILE}"
+  resolved_profile="${ENVKIT_PROFILE:-$DEFAULT_PROFILE}"
   resolved_request_file="${USER_REQUEST_FILE:-}"
   if [ -z "$resolved_request_file" ]; then
     resolved_request_file="$(resolve_request_file "$resolved_profile" "$DEFAULT_REQUEST_FILE")"
@@ -50,7 +50,7 @@ run_task() {
     PLUGIN_LOCK_FILE="${PLUGIN_LOCK_FILE:-$DEFAULT_PLUGIN_LOCK_FILE}" \
     THEME_FILE="${THEME_FILE:-$DEFAULT_THEME_FILE}" \
     USER_REQUEST_FILE="$resolved_request_file" \
-    DEV_ENV_PROFILE="$resolved_profile" \
+    ENVKIT_PROFILE="$resolved_profile" \
     "$TASKS_DIR/$task" "$@"
 }
 
@@ -62,7 +62,7 @@ packages_command() {
         dry_run=1
         ;;
       --help | -h)
-        echo 'Usage: dev-env packages [--dry-run]'
+        echo 'Usage: envkit packages [--dry-run]'
         return 0
         ;;
       *)
@@ -73,7 +73,7 @@ packages_command() {
     shift || true
   done
 
-  DEV_ENV_DRY_RUN="$dry_run" run_task install_packages.sh
+  ENVKIT_DRY_RUN="$dry_run" run_task install_packages.sh
 }
 
 ohmyzsh_command() {
@@ -92,7 +92,7 @@ ohmyzsh_command() {
         }
         ;;
       --help | -h)
-        echo 'Usage: dev-env ohmyzsh [--dry-run] [--profile <name>]'
+        echo 'Usage: envkit ohmyzsh [--dry-run] [--profile <name>]'
         return 0
         ;;
       *)
@@ -103,7 +103,7 @@ ohmyzsh_command() {
     shift || true
   done
 
-  DEV_ENV_DRY_RUN="$dry_run" DEV_ENV_PROFILE="$profile" run_task install_ohmyzsh.sh
+  ENVKIT_DRY_RUN="$dry_run" ENVKIT_PROFILE="$profile" run_task install_ohmyzsh.sh
 }
 
 plugins_command() {
@@ -122,7 +122,7 @@ plugins_command() {
         }
         ;;
       --help | -h)
-        echo 'Usage: dev-env plugins [--dry-run] [--profile <name>]'
+        echo 'Usage: envkit plugins [--dry-run] [--profile <name>]'
         return 0
         ;;
       *)
@@ -133,7 +133,7 @@ plugins_command() {
     shift || true
   done
 
-  DEV_ENV_DRY_RUN="$dry_run" DEV_ENV_PROFILE="$profile" run_task install_plugins.sh
+  ENVKIT_DRY_RUN="$dry_run" ENVKIT_PROFILE="$profile" run_task install_plugins.sh
 }
 
 configure_command() {
@@ -152,7 +152,7 @@ configure_command() {
         }
         ;;
       --help | -h)
-        echo 'Usage: dev-env configure [--dry-run] [--profile <name>]'
+        echo 'Usage: envkit configure [--dry-run] [--profile <name>]'
         return 0
         ;;
       *)
@@ -163,7 +163,7 @@ configure_command() {
     shift || true
   done
 
-  DEV_ENV_DRY_RUN="$dry_run" DEV_ENV_PROFILE="$profile" run_task configure_zshrc.sh
+  ENVKIT_DRY_RUN="$dry_run" ENVKIT_PROFILE="$profile" run_task configure_zshrc.sh
 }
 
 apply_user_command() {
@@ -190,7 +190,7 @@ apply_user_command() {
         }
         ;;
       --help | -h)
-        echo 'Usage: dev-env apply-user [--dry-run] [--profile <name>] [--request-file <path>]'
+        echo 'Usage: envkit apply-user [--dry-run] [--profile <name>] [--request-file <path>]'
         return 0
         ;;
       *)
@@ -201,7 +201,7 @@ apply_user_command() {
     shift || true
   done
 
-  DEV_ENV_DRY_RUN="$dry_run" DEV_ENV_PROFILE="$profile" USER_REQUEST_FILE="$request_file" run_task apply_user_request.sh
+  ENVKIT_DRY_RUN="$dry_run" ENVKIT_PROFILE="$profile" USER_REQUEST_FILE="$request_file" run_task apply_user_request.sh
 }
 
 verify_command() {
@@ -217,7 +217,7 @@ verify_command() {
         }
         ;;
       --help | -h)
-        echo 'Usage: dev-env verify [--profile <name>]'
+        echo 'Usage: envkit verify [--profile <name>]'
         return 0
         ;;
       *)
@@ -228,7 +228,7 @@ verify_command() {
     shift || true
   done
 
-  DEV_ENV_PROFILE="$profile" run_task verify.sh
+  ENVKIT_PROFILE="$profile" run_task verify.sh
 }
 
 doctor_command() {
@@ -244,7 +244,7 @@ doctor_command() {
         }
         ;;
       --help | -h)
-        echo 'Usage: dev-env doctor [--profile <name>]'
+        echo 'Usage: envkit doctor [--profile <name>]'
         return 0
         ;;
       *)
@@ -255,7 +255,7 @@ doctor_command() {
     shift || true
   done
 
-  DEV_ENV_PROFILE="$profile" run_task doctor.sh
+  ENVKIT_PROFILE="$profile" run_task doctor.sh
 }
 
 rollback_command() {
@@ -282,7 +282,7 @@ rollback_command() {
         dry_run=1
         ;;
       --help | -h)
-        echo 'Usage: dev-env rollback --backup-file <path> [--target <path>] [--dry-run]'
+        echo 'Usage: envkit rollback --backup-file <path> [--target <path>] [--dry-run]'
         return 0
         ;;
       *)
@@ -297,7 +297,7 @@ rollback_command() {
     echo 'rollback requires --backup-file <path>' >&2
     return 1
   }
-  DEV_ENV_DRY_RUN="$dry_run" BACKUP_FILE="$backup_file" ROLLBACK_TARGET="$rollback_target" run_task backups.sh rollback
+  ENVKIT_DRY_RUN="$dry_run" BACKUP_FILE="$backup_file" ROLLBACK_TARGET="$rollback_target" run_task backups.sh rollback
 }
 
 clean_backups_command() {
@@ -308,7 +308,7 @@ clean_backups_command() {
         apply=1
         ;;
       --help | -h)
-        echo 'Usage: dev-env clean-backups [--apply]'
+        echo 'Usage: envkit clean-backups [--apply]'
         return 0
         ;;
       *)
@@ -330,7 +330,7 @@ chsh_command() {
         dry_run=1
         ;;
       --help | -h)
-        echo 'Usage: dev-env chsh [--dry-run]'
+        echo 'Usage: envkit chsh [--dry-run]'
         return 0
         ;;
       *)
@@ -341,7 +341,7 @@ chsh_command() {
     shift || true
   done
 
-  DEV_ENV_DRY_RUN="$dry_run" run_task change_shell.sh
+  ENVKIT_DRY_RUN="$dry_run" run_task change_shell.sh
 }
 
 bootstrap_command() {
@@ -367,7 +367,7 @@ bootstrap_command() {
         }
         ;;
       --help | -h)
-        echo 'Usage: dev-env bootstrap [--profile <name>] [--dry-run] [--set-default-shell] [--no-packages]'
+        echo 'Usage: envkit bootstrap [--profile <name>] [--dry-run] [--set-default-shell] [--no-packages]'
         return 0
         ;;
       *)
@@ -379,20 +379,20 @@ bootstrap_command() {
   done
 
   if [[ "$run_packages" -eq 1 ]]; then
-    DEV_ENV_DRY_RUN="$dry_run" DEV_ENV_PROFILE="$profile" run_task install_packages.sh
+    ENVKIT_DRY_RUN="$dry_run" ENVKIT_PROFILE="$profile" run_task install_packages.sh
   fi
-  DEV_ENV_DRY_RUN="$dry_run" DEV_ENV_PROFILE="$profile" run_task install_ohmyzsh.sh
-  DEV_ENV_DRY_RUN="$dry_run" DEV_ENV_PROFILE="$profile" run_task install_plugins.sh
-  DEV_ENV_DRY_RUN="$dry_run" DEV_ENV_PROFILE="$profile" run_task configure_zshrc.sh
+  ENVKIT_DRY_RUN="$dry_run" ENVKIT_PROFILE="$profile" run_task install_ohmyzsh.sh
+  ENVKIT_DRY_RUN="$dry_run" ENVKIT_PROFILE="$profile" run_task install_plugins.sh
+  ENVKIT_DRY_RUN="$dry_run" ENVKIT_PROFILE="$profile" run_task configure_zshrc.sh
 
   if [[ "$dry_run" -eq 0 ]]; then
-    DEV_ENV_PROFILE="$profile" run_task verify.sh
+    ENVKIT_PROFILE="$profile" run_task verify.sh
   else
     echo 'bootstrap dry-run complete. verify is skipped because no changes were applied.'
   fi
 
   if [[ "$set_default_shell" -eq 1 ]]; then
-    DEV_ENV_DRY_RUN="$dry_run" run_task change_shell.sh
+    ENVKIT_DRY_RUN="$dry_run" run_task change_shell.sh
   fi
 
   echo 'bootstrap complete. apply now with: exec zsh'

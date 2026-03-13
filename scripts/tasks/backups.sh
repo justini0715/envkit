@@ -14,10 +14,10 @@ source "$SCRIPT_DIR/lib.sh"
 collect_backup_files() {
   local pattern file
   local -a patterns=(
-    "$ZSHRC.dev-env.bak.*"
-    "$ZSH_CONF_DIR/*.dev-env.bak.*"
-    "$HOME/.bg.py.dev-env.bak.*"
-    "$HOME/.printbg.py.dev-env.bak.*"
+    "$ZSHRC.envkit.bak.*"
+    "$ZSH_CONF_DIR/*.envkit.bak.*"
+    "$HOME/.bg.py.envkit.bak.*"
+    "$HOME/.printbg.py.envkit.bak.*"
   )
 
   for pattern in "${patterns[@]}"; do
@@ -44,7 +44,7 @@ case "$command_name" in
   list)
     mapfile -t backups < <(collect_backup_files | sort -r)
     if [ "${#backups[@]}" -eq 0 ]; then
-      echo 'No dev-env backup files found.'
+      echo 'No envkit backup files found.'
       exit 0
     fi
     printf '%s
@@ -54,8 +54,8 @@ case "$command_name" in
     [ -n "$BACKUP_FILE" ] || die 'rollback requires BACKUP_FILE'
     [ -f "$BACKUP_FILE" ] || die "backup file not found: $BACKUP_FILE"
     case "$BACKUP_FILE" in
-      *.dev-env.bak.*) ;;
-      *) die "refusing rollback from non dev-env backup file: $BACKUP_FILE" ;;
+      *.envkit.bak.*) ;;
+      *) die "refusing rollback from non envkit backup file: $BACKUP_FILE" ;;
     esac
     if is_dry_run; then
       echo "[dry-run] cp $BACKUP_FILE $ROLLBACK_TARGET"
@@ -68,7 +68,7 @@ case "$command_name" in
   clean)
     mapfile -t backups < <(collect_backup_files | sort -r)
     if [ "${#backups[@]}" -eq 0 ]; then
-      echo 'No dev-env backup files found.'
+      echo 'No envkit backup files found.'
       exit 0
     fi
     if [ "$APPLY" != '1' ]; then

@@ -5,20 +5,20 @@
 - Branch: `feat/phase1-product-foundation`
 
 ## Objective
-Turn the repository into a clean, product-centric `dev-env` CLI workspace that can support later implementation phases without inheriting the nested `archive/tools/dev-env` structure.
+Turn the repository into a clean, product-centric `envkit` CLI workspace that can support later implementation phases without inheriting the nested `archive/tools/dev-env` structure.
 
 ## Problem Statement
 The rebuild needs a stable foundation before any environment-mutating shell logic is carried forward. Today the repo has execution guidance, but it still needs the phase-specific planning artifacts, scaffolded product structure, and a reliable local command surface for autonomous work.
 
 ## Users
-- Maintainers rebuilding `dev-env` phase-by-phase
+- Maintainers rebuilding `envkit` phase-by-phase
 - Codex / OMX agents that need deterministic repo structure and command routing
 - Future operators who need clear docs and local verification entrypoints
 
 ## In Scope
 - product-centric repository layout at the repo root
 - root `Makefile` with phase-appropriate help and verification targets
-- local CLI entrypoint strategy (`./dev-env`, `scripts/dev-env.sh`, `scripts/main.sh`, shared lib)
+- local CLI entrypoint strategy (`./envkit`, `scripts/envkit.sh`, `scripts/main.sh`, shared lib)
 - creation of foundational directories (`config`, `docs`, `scripts`, `tests`, `packaging`, `resources`)
 - phase-specific docs and runbooks for local usage
 - smoke-safe command routing where later-phase commands resolve explicitly without mutating the system yet
@@ -34,7 +34,7 @@ The rebuild needs a stable foundation before any environment-mutating shell logi
 - `/home/iostream/Desktop/dev-env/tools/dev-env/README.md` — command surface and operator-facing framing
 - `/home/iostream/Desktop/dev-env/tools/dev-env/Makefile` — target naming and help layout inspiration
 - `/home/iostream/Desktop/dev-env/tools/dev-env/scripts/main.sh` — task-router shape
-- `/home/iostream/Desktop/dev-env/tools/dev-env/scripts/dev-env.sh` — CLI command mapping shape
+- `/home/iostream/Desktop/dev-env/tools/dev-env/scripts/envkit.sh` — CLI command mapping shape
 
 ## Deliverables
 1. Missing planning artifacts for Phase 1 in `.omx/plans/`
@@ -50,9 +50,9 @@ The rebuild needs a stable foundation before any environment-mutating shell logi
 - `.omx/plans/prd-phase1-product-foundation.md` exists
 - `.omx/plans/test-spec-phase1-product-foundation.md` exists
 - `make help` succeeds
-- `./dev-env help` succeeds
-- `./dev-env doctor` succeeds and reports branch/doc/artifact status
-- `./dev-env test` and `./dev-env verify` succeed locally
+- `./envkit help` succeeds
+- `./envkit doctor` succeeds and reports branch/doc/artifact status
+- `./envkit test` and `./envkit verify` succeed locally
 - Later-phase commands such as `packages`, `ohmyzsh`, `plugins`, `configure`, `apply-user`, `backups-*`, and `chsh` resolve with explicit deferred messaging instead of missing-file errors
 - No later-phase implementation is started
 

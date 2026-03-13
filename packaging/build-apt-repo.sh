@@ -10,9 +10,9 @@ deb_file="$1"
 output_dir="${2:-dist/apt}"
 distribution="${3:-stable}"
 component="${COMPONENT:-main}"
-origin="${REPO_ORIGIN:-dev-env}"
-label="${REPO_LABEL:-dev-env}"
-description="${REPO_DESCRIPTION:-dev-env apt repository}"
+origin="${REPO_ORIGIN:-envkit}"
+label="${REPO_LABEL:-envkit}"
+description="${REPO_DESCRIPTION:-envkit apt repository}"
 suite="${REPO_SUITE:-$distribution}"
 codename="${REPO_CODENAME:-$distribution}"
 architectures="${REPO_ARCHITECTURES:-amd64 all}"
@@ -33,10 +33,10 @@ if ! command -v apt-ftparchive > /dev/null 2>&1; then
 fi
 
 repo_root="$(cd "$(dirname "$output_dir")" && pwd)/$(basename "$output_dir")"
-mkdir -p "$repo_root/pool/$component/d/dev-env"
+mkdir -p "$repo_root/pool/$component/d/envkit"
 
 deb_name="$(basename "$deb_file")"
-cp -f "$deb_file" "$repo_root/pool/$component/d/dev-env/$deb_name"
+cp -f "$deb_file" "$repo_root/pool/$component/d/envkit/$deb_name"
 
 for arch in amd64 all; do
   mkdir -p "$repo_root/dists/$distribution/$component/binary-$arch"

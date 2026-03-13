@@ -4,7 +4,7 @@ Also inspect `/home/iostream/Desktop/dev-env` as a brownfield reference implemen
 This repository already contains starter execution documents and Phase 1 bootstrap artifacts. Refine and use them instead of discarding them unless there is a strong reason.
 
 Project objective:
-Build `dev-env` as a standalone, product-quality Debian/Ubuntu zsh bootstrap CLI that is suitable for a public GitHub release.
+Build `envkit` as a standalone, product-quality Debian/Ubuntu zsh bootstrap CLI that is suitable for a public GitHub release.
 
 Required outcomes:
 - standalone product repo identity
