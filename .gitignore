@@ -1,4 +1,6 @@
-.omx/
+.omx/*
+!.omx/plans/
+!.omx/plans/*.md
 dist/
 *.deb
 *.log
