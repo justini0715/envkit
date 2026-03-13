@@ -27,6 +27,7 @@ required_files=(
   docs/runbooks/local-setup.md
   docs/runbooks/recovery-and-rollback.md
   docs/runbooks/troubleshooting.md
+  docs/runbooks/developer-guide.md
   docs/checklists/release-checklist.md
   docs/release-notes-template.md
   .omx/plans/prd-phase1-product-foundation.md

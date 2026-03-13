@@ -42,6 +42,10 @@ grep -q 'bootstrap' "$TMP_ROOT/package-help.txt"
 authless_apt_dir="$APT_OUTPUT_DIR"
 rm -rf "$authless_apt_dir"
 ./packaging/build-apt-repo.sh "$deb_file" "$authless_apt_dir" stable > /dev/null
+[ -f "$authless_apt_dir/index.html" ] || {
+  echo 'missing Pages index.html' >&2
+  exit 1
+}
 [ -f "$authless_apt_dir/dists/stable/Release" ] || {
   echo 'missing Release file' >&2
   exit 1
@@ -54,6 +58,8 @@ rm -rf "$authless_apt_dir"
   echo 'missing Packages.gz file' >&2
   exit 1
 }
+grep -q 'envkit APT Repository' "$authless_apt_dir/index.html"
+grep -q 'sudo apt install -y envkit' "$authless_apt_dir/index.html"
 
 prefix_dir="$TMP_ROOT/prefix"
 ./install.sh --prefix "$prefix_dir" > /dev/null
