@@ -16,10 +16,16 @@ jobs:
       contents: write
       pages: write
       id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
 
       - name: Install packaging dependencies
         run: |
@@ -55,16 +61,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: gh release upload "${GITHUB_REF_NAME}" dist/deb/*.deb --clobber
 
-      - name: Create Pages artifact
-        run: |
-          tar -C dist/apt -cf - . | gzip -9 > "$RUNNER_TEMP/github-pages.tar.gz"
-
       - name: Upload Pages artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-pages-artifact@v4
         with:
-          name: github-pages
-          path: ${{ runner.temp }}/github-pages.tar.gz
-          retention-days: 1
+          path: dist/apt
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
