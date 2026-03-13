@@ -1,0 +1,2 @@
+# Optional theme override.
+# Leave this file comment-only to use the selected profile/default theme.

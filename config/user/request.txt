@@ -1,0 +1,5 @@
+# Example user request file
+# plugins: git zsh-autosuggestions zsh-syntax-highlighting
+# theme: robbyrussell
+# aliases: ll='ls -alF', gs='git status -sb'
+# init: [ -f "$HOME/.env.local" ] && source "$HOME/.env.local"

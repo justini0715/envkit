@@ -1,0 +1,2 @@
+# Optional explicit plugin list.
+# Leave this file comment-only to use the selected profile defaults.

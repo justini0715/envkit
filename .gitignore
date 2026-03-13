@@ -1,0 +1,10 @@
+.omx/*
+!.omx/plans/
+!.omx/plans/*.md
+dist/
+*.deb
+*.log
+*.dev-env.bak.*
+.DS_Store
+*.swp
+.cache/
