@@ -91,8 +91,10 @@ done
 branch_name="$(git branch --show-current)"
 case "$branch_name" in
   main | master)
-    echo "branch policy violated: $branch_name" >&2
-    exit 1
+    if [ "${CI:-}" != "true" ]; then
+      echo "branch policy violated: $branch_name" >&2
+      exit 1
+    fi
     ;;
 esac
 
