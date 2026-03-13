@@ -10,7 +10,7 @@ The rebuilt repository now has a standalone CLI core, but it is not yet releasea
 ## Decision
 Phase 3 uses:
 - `.deb` packaging rooted at the standalone repo layout
-- `/usr/lib/dev-env` + `/usr/bin/dev-env` wrapper packaging layout
+- `/usr/lib/envkit` + `/usr/bin/envkit` wrapper packaging layout
 - local `install.sh --prefix <path>` for non-package installs
 - unsigned/local APT repo smoke verification by default
 - GPG material generated under local state outside tracked repo contents

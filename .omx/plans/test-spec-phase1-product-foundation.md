@@ -17,8 +17,8 @@ Validate that the required Phase 1 control files and directories exist.
 - `project_manual.md`
 - `docs/architecture/implementation-plan.md`
 - `Makefile`
-- `dev-env`
-- `scripts/dev-env.sh`
+- `envkit`
+- `scripts/envkit.sh`
 - `scripts/main.sh`
 - `scripts/lib.sh`
 - `tests/phase1_smoke.sh`
@@ -33,11 +33,11 @@ Run `bash -n` across the new shell entrypoints and tests.
 
 ### 4. CLI smoke routing
 Validate:
-- `./dev-env help`
-- `./dev-env doctor`
+- `./envkit help`
+- `./envkit doctor`
 - `./scripts/main.sh doctor`
-- `./dev-env packages` returns a deferred Phase 2 message
-- `./dev-env rollback --backup-file /tmp/example.bak` returns a deferred Phase 2 message
+- `./envkit packages` returns a deferred Phase 2 message
+- `./envkit rollback --backup-file /tmp/example.bak` returns a deferred Phase 2 message
 
 ### 5. Make target smoke
 Validate:
@@ -47,14 +47,14 @@ Validate:
 
 ## Recommended Command Sequence
 ```bash
-bash -n dev-env scripts/*.sh scripts/tasks/*.sh tests/*.sh
+bash -n envkit scripts/*.sh scripts/tasks/*.sh tests/*.sh
 make help
-./dev-env help
-./dev-env doctor
-./dev-env packages
-./dev-env rollback --backup-file /tmp/example.bak
-./dev-env test
-./dev-env verify
+./envkit help
+./envkit doctor
+./envkit packages
+./envkit rollback --backup-file /tmp/example.bak
+./envkit test
+./envkit verify
 make test
 make verify
 ```

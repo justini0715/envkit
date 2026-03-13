@@ -5,12 +5,12 @@
 - Phase: Phase 1 — Product Foundation
 
 ## Context
-The brownfield reference lives inside `/home/iostream/Desktop/dev-env/tools/dev-env` under an `archive` repository. The rebuild needs to present `dev-env` as the repository's primary product identity while still reusing good ideas from the old command surface and routing model.
+The brownfield reference lives inside `/home/iostream/Desktop/dev-env/tools/dev-env` under an `archive` repository. The rebuild needs to present `envkit` as the repository's primary product identity while still reusing good ideas from the old command surface and routing model.
 
 ## Decision
-Use a product-first root structure in `/home/iostream/autopilot-test`:
-- root README and Makefile describe `dev-env` directly
-- root CLI shim (`./dev-env`) routes into `scripts/dev-env.sh`
+Use a product-first root structure in `/home/iostream/envkit`:
+- root README and Makefile describe `envkit` directly
+- root CLI shim (`./envkit`) routes into `scripts/envkit.sh`
 - `scripts/main.sh` dispatches task scripts under `scripts/tasks/`
 - `config/`, `docs/`, `tests/`, `packaging/`, and `resources/` are top-level product areas
 - later-phase features remain deferred until their official phase begins

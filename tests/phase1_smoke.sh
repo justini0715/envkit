@@ -5,7 +5,7 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT_DIR"
 
 syntax_paths=(
-  dev-env
+  envkit
   scripts/*.sh
   scripts/tasks/*.sh
   tests/*.sh

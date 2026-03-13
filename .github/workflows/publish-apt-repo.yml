@@ -40,7 +40,7 @@ jobs:
           GPG_KEY_ID: ${{ secrets.APT_GPG_KEY_ID }}
           GPG_PASSPHRASE: ${{ secrets.APT_GPG_PASSPHRASE }}
         run: |
-          DEB_FILE=$(ls -1 dist/deb/dev-env_*_all.deb | tail -n 1)
+          DEB_FILE=$(ls -1 dist/deb/envkit_*_all.deb | tail -n 1)
           if [ -n "${{ secrets.APT_GPG_PRIVATE_KEY }}" ]; then
             export GNUPGHOME="$RUNNER_TEMP/gnupg"
             mkdir -p "$GNUPGHOME"

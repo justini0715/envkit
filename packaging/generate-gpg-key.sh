@@ -2,9 +2,9 @@
 set -euo pipefail
 
 STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
-OUTPUT_DIR=${OUTPUT_DIR:-"$STATE_HOME/dev-env/gpg"}
-KEY_NAME=${KEY_NAME:-"dev-env APT Signing Key"}
-KEY_EMAIL=${KEY_EMAIL:-"dev-env@example.invalid"}
+OUTPUT_DIR=${OUTPUT_DIR:-"$STATE_HOME/envkit/gpg"}
+KEY_NAME=${KEY_NAME:-"envkit APT Signing Key"}
+KEY_EMAIL=${KEY_EMAIL:-"envkit@example.invalid"}
 KEY_COMMENT=${KEY_COMMENT:-"GitHub APT repo signing"}
 KEY_TYPE=${KEY_TYPE:-"RSA"}
 KEY_LENGTH=${KEY_LENGTH:-"4096"}

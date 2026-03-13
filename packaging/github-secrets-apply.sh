@@ -5,8 +5,8 @@ STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 REPO=${REPO:-""}
 KEY_ID=${KEY_ID:-""}
 PASSPHRASE=${PASSPHRASE:-""}
-PRIVATE_KEY_FILE=${PRIVATE_KEY_FILE:-"$STATE_HOME/dev-env/gpg/private.key.asc"}
-SECRETS_ENV_FILE=${SECRETS_ENV_FILE:-"$STATE_HOME/dev-env/gpg/apt-secrets.env"}
+PRIVATE_KEY_FILE=${PRIVATE_KEY_FILE:-"$STATE_HOME/envkit/gpg/private.key.asc"}
+SECRETS_ENV_FILE=${SECRETS_ENV_FILE:-"$STATE_HOME/envkit/gpg/apt-secrets.env"}
 
 resolve_repo_from_git() {
   local remote_url

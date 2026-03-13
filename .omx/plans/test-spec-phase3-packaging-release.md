@@ -17,7 +17,7 @@ Verify that the project can build release artifacts and package/release scaffold
 
 ### 3. Package smoke verification
 - unpack the built `.deb` into a temp directory
-- execute the packaged `dev-env help` wrapper from the unpacked tree
+- execute the packaged `envkit help` wrapper from the unpacked tree
 - build an unsigned local APT repo from the `.deb`
 - verify `Release`, `Packages`, and `Packages.gz` outputs exist
 
@@ -30,8 +30,8 @@ Verify that the project can build release artifacts and package/release scaffold
 
 ## Recommended Command Sequence
 ```bash
-bash -n dev-env scripts/*.sh scripts/tasks/*.sh packaging/*.sh install.sh tests/*.sh tests/smoke/*.sh
-./dev-env test
+bash -n envkit scripts/*.sh scripts/tasks/*.sh packaging/*.sh install.sh tests/*.sh tests/smoke/*.sh
+./envkit test
 make package-deb VERSION=0.3.0-test
 ./tests/phase3-packaging-smoke.sh
 make verify

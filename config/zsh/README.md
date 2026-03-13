@@ -4,4 +4,4 @@
 - `plugin-lock.txt` — optional lock refs for supported external plugins
 - `theme.txt` — optional theme override (first non-comment line wins)
 
-If `plugins.txt` or `theme.txt` contain no usable values, `dev-env` falls back to the selected profile.
+If `plugins.txt` or `theme.txt` contain no usable values, `envkit` falls back to the selected profile.

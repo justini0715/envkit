@@ -11,7 +11,7 @@ source "$SCRIPT_DIR/lib.sh"
 USER_REQUEST_FILE=${USER_REQUEST_FILE:-"$ROOT_DIR/config/user/request.txt"}
 PLUGINS_FILE=${PLUGINS_FILE:-"$ROOT_DIR/config/zsh/plugins.txt"}
 THEME_FILE=${THEME_FILE:-"$ROOT_DIR/config/zsh/theme.txt"}
-USER_CONF_TARGET=${USER_CONF_TARGET:-"$HOME/.config/zsh/conf.d/30-dev-env-user.zsh"}
+USER_CONF_TARGET=${USER_CONF_TARGET:-"$HOME/.config/zsh/conf.d/30-envkit-user.zsh"}
 
 declare -a _tmp_files=()
 cleanup() {
@@ -57,8 +57,7 @@ normalize_alias_specs() {
   done
 
   if [ "${#result[@]}" -gt 0 ]; then
-    printf '%s
-' "${result[@]}"
+    printf '%s\n' "${result[@]}"
   fi
 }
 
@@ -67,7 +66,7 @@ normalize_plugins() {
   local plugin normalized seen=' '
   declare -a plugins=()
 
-  normalized="$(printf '%s' "$raw_plugins" | tr ',	' '  ' | xargs)"
+  normalized="$(printf '%s' "$raw_plugins" | tr ',\t' '  ' | xargs)"
   [ -n "$normalized" ] || die 'plugins directive is empty'
 
   for plugin in $normalized; do
@@ -79,8 +78,7 @@ normalize_plugins() {
     plugins+=("$plugin")
   done
 
-  printf '%s
-' "${plugins[@]}"
+  printf '%s\n' "${plugins[@]}"
 }
 
 normalize_theme() {
@@ -97,9 +95,8 @@ if [ -z "$(trim_whitespace "$request_text")" ]; then
   exit 0
 fi
 
-request_text="${request_text//$''/}"
-request_text="${request_text//;/$'
-'}"
+request_text="${request_text//$'\r'/}"
+request_text="${request_text//;/$'\n'}"
 
 plugins_raw=''
 theme_raw=''
@@ -142,8 +139,7 @@ if [ -n "$plugins_raw" ]; then
   mapfile -t plugins_out < <(normalize_plugins "$plugins_raw")
   tmp_plugins="$(mktemp)"
   _tmp_files+=("$tmp_plugins")
-  printf '%s
-' "${plugins_out[@]}" > "$tmp_plugins"
+  printf '%s\n' "${plugins_out[@]}" > "$tmp_plugins"
   sync_file_with_backup "$tmp_plugins" "$PLUGINS_FILE"
   echo "apply_user_request: updated plugins file -> $PLUGINS_FILE"
 fi
@@ -153,10 +149,9 @@ if [ -n "$theme_raw" ]; then
   tmp_theme="$(mktemp)"
   _tmp_files+=("$tmp_theme")
   {
-    echo '# Managed by dev-env apply-user task'
+    echo '# Managed by envkit apply-user task'
     echo '# First non-comment line is used by configure.'
-    printf '%s
-' "$theme_out"
+    printf '%s\n' "$theme_out"
   } > "$tmp_theme"
   sync_file_with_backup "$tmp_theme" "$THEME_FILE"
   echo "apply_user_request: updated theme file -> $THEME_FILE"
@@ -166,15 +161,14 @@ if [ "${#aliases_raw[@]}" -gt 0 ] || [ "${#init_commands[@]}" -gt 0 ]; then
   tmp_conf="$(mktemp)"
   _tmp_files+=("$tmp_conf")
   {
-    echo '# Managed by dev-env apply-user task'
+    echo '# Managed by envkit apply-user task'
     echo '# Source: USER_REQUEST_TEXT or USER_REQUEST_FILE'
 
     if [ "${#aliases_raw[@]}" -gt 0 ]; then
       mapfile -t aliases_out < <(normalize_alias_specs "${aliases_raw[@]}")
       echo
       echo '# aliases'
-      printf '%s
-' "${aliases_out[@]}"
+      printf '%s\n' "${aliases_out[@]}"
     fi
 
     if [ "${#init_commands[@]}" -gt 0 ]; then
@@ -182,8 +176,7 @@ if [ "${#aliases_raw[@]}" -gt 0 ] || [ "${#init_commands[@]}" -gt 0 ]; then
       echo '# init (interactive shell only)'
       echo 'if [[ -o interactive ]]; then'
       for init_command in "${init_commands[@]}"; do
-        printf '  %s
-' "$init_command"
+        printf '  %s\n' "$init_command"
       done
       echo 'fi'
     fi

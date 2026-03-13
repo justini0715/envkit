@@ -1,4 +1,4 @@
-# dev-env
+# envkit
 
 A standalone Debian/Ubuntu development-environment CLI rebuild.
 
@@ -19,7 +19,7 @@ Phase 4 adds:
 ```bash
 make lint
 make format-check
-./dev-env test
+./envkit test
 ./tests/phase3-packaging-smoke.sh
 make verify
 ```
@@ -44,7 +44,7 @@ make package-deb VERSION=0.3.0-test
 ## Packaging Notes
 
 - package metadata declares runtime expectations more honestly than the brownfield baseline
-- generated GPG material defaults to `${XDG_STATE_HOME:-$HOME/.local/state}/dev-env/gpg`
+- generated GPG material defaults to `${XDG_STATE_HOME:-$HOME/.local/state}/envkit/gpg`
 - package smoke uses unpacked artifacts and temp prefixes instead of root installs
 - GitHub publish/auth steps remain documented but are not required for local verification
 
@@ -59,7 +59,7 @@ Profiles live under `config/profiles/`:
 ## Repository Shape
 
 ```text
-dev-env/
+envkit/
   AGENTS.md
   project_manual.md
   README.md

@@ -7,18 +7,15 @@ repo_root() {
 }
 
 current_phase_name() {
-  printf '%s
-' 'Phase 4 — Hardening and Polish'
+  printf '%s\n' 'Phase 4 — Hardening and Polish'
 }
 
 current_phase_prd_path() {
-  printf '%s/.omx/plans/prd-phase4-hardening.md
-' "$(repo_root)"
+  printf '%s/.omx/plans/prd-phase4-hardening.md\n' "$(repo_root)"
 }
 
 current_phase_test_spec_path() {
-  printf '%s/.omx/plans/test-spec-phase4-hardening.md
-' "$(repo_root)"
+  printf '%s/.omx/plans/test-spec-phase4-hardening.md\n' "$(repo_root)"
 }
 
 warn() {
@@ -35,7 +32,7 @@ die() {
 }
 
 is_dry_run() {
-  [[ "${DEV_ENV_DRY_RUN:-0}" == "1" ]]
+  [[ "${ENVKIT_DRY_RUN:-0}" == "1" ]]
 }
 
 run_cmd() {
@@ -45,8 +42,7 @@ run_cmd() {
     for arg in "$@"; do
       printf ' %q' "$arg"
     done
-    printf '
-'
+    printf '\n'
     return 0
   fi
 
@@ -67,7 +63,7 @@ read_first_data_line() {
 
   awk '
     {
-      gsub(/$/, "", $0)
+      gsub(/\r$/, "", $0)
       if ($0 ~ /^[[:space:]]*#/ || $0 ~ /^[[:space:]]*$/) {
         next
       }
@@ -117,7 +113,7 @@ sync_file_with_backup() {
   fi
 
   if [ -e "$target_file" ]; then
-    backup_file="${target_file}.dev-env.bak.$(generate_backup_suffix)"
+    backup_file="${target_file}.envkit.bak.$(generate_backup_suffix)"
     if is_dry_run; then
       echo "[dry-run] cp $target_file $backup_file"
     else
@@ -136,23 +132,22 @@ sync_file_with_backup() {
 
 profile_file() {
   local profile_name=${1:?profile name is required}
-  printf '%s/config/profiles/%s.env
-' "$(repo_root)" "$profile_name"
+  printf '%s/config/profiles/%s.env\n' "$(repo_root)" "$profile_name"
 }
 
 resolve_profile() {
-  local requested_profile=${1:-${DEV_ENV_PROFILE:-minimal}}
+  local requested_profile=${1:-${ENVKIT_PROFILE:-minimal}}
   local file
   file="$(profile_file "$requested_profile")"
   [ -r "$file" ] || die "profile not found or unreadable: $requested_profile ($file)"
-  printf '%s
-' "$requested_profile"
+  printf '%s\n' "$requested_profile"
 }
 
 profile_field() {
   local requested_profile=${1:-}
   local field_name=${2:?field name is required}
   local resolved_profile file
+
   resolved_profile="$(resolve_profile "$requested_profile")"
   file="$(profile_file "$resolved_profile")"
 
@@ -166,24 +161,19 @@ profile_field() {
     . "$file"
     case "$field_name" in
       PROFILE_NAME)
-        printf '%s
-' "${PROFILE_NAME:-$resolved_profile}"
+        printf '%s\n' "${PROFILE_NAME:-$resolved_profile}"
         ;;
       PROFILE_DESCRIPTION)
-        printf '%s
-' "${PROFILE_DESCRIPTION:-}"
+        printf '%s\n' "${PROFILE_DESCRIPTION:-}"
         ;;
       PROFILE_PLUGINS)
-        printf '%s
-' "${PROFILE_PLUGINS:-}"
+        printf '%s\n' "${PROFILE_PLUGINS:-}"
         ;;
       PROFILE_THEME)
-        printf '%s
-' "${PROFILE_THEME:-}"
+        printf '%s\n' "${PROFILE_THEME:-}"
         ;;
       PROFILE_REQUEST_FILE)
-        printf '%s
-' "${PROFILE_REQUEST_FILE:-}"
+        printf '%s\n' "${PROFILE_REQUEST_FILE:-}"
         ;;
       *)
         exit 1
@@ -212,20 +202,17 @@ resolve_request_file() {
 
   configured_file="$(trim_whitespace "$(profile_request_file "$requested_profile")")"
   if [ -z "$configured_file" ]; then
-    printf '%s
-' "$fallback_file"
+    printf '%s\n' "$fallback_file"
     return 0
   fi
 
   root="$(repo_root)"
   case "$configured_file" in
     /*)
-      printf '%s
-' "$configured_file"
+      printf '%s\n' "$configured_file"
       ;;
     *)
-      printf '%s/%s
-' "$root" "$configured_file"
+      printf '%s/%s\n' "$root" "$configured_file"
       ;;
   esac
 }
@@ -237,12 +224,11 @@ load_plugins() {
   local profile_name
 
   if [ -n "$plugins_file" ] && [ -r "$plugins_file" ]; then
-    plugin_list="$(grep -Ev '^[[:space:]]*#|^[[:space:]]*$' "$plugins_file" | tr '
-' ' ' | xargs || true)"
+    plugin_list="$(grep -Ev '^[[:space:]]*#|^[[:space:]]*$' "$plugins_file" | tr '\n' ' ' | xargs || true)"
   fi
 
   if [ -z "$plugin_list" ]; then
-    profile_name="$(resolve_profile "${DEV_ENV_PROFILE:-minimal}")"
+    profile_name="$(resolve_profile "${ENVKIT_PROFILE:-minimal}")"
     plugin_list="$(profile_plugins "$profile_name" | xargs || true)"
   fi
 
@@ -268,7 +254,7 @@ resolve_theme() {
   fi
 
   if [ -z "$resolved_theme" ]; then
-    profile_name="$(resolve_profile "${DEV_ENV_PROFILE:-minimal}")"
+    profile_name="$(resolve_profile "${ENVKIT_PROFILE:-minimal}")"
     resolved_theme="$(trim_whitespace "$(profile_theme "$profile_name")")"
   fi
 
@@ -281,8 +267,7 @@ resolve_theme() {
     resolved_theme="$default_theme"
   fi
 
-  printf '%s
-' "$resolved_theme"
+  printf '%s\n' "$resolved_theme"
 }
 
 get_locked_ref() {
@@ -291,7 +276,7 @@ get_locked_ref() {
   if [ -n "$lock_file" ] && [ -r "$lock_file" ]; then
     awk -F= -v key="$plugin" '
       $1 !~ /^[[:space:]]*#/ && $1 == key {
-        gsub(/^[ 	]+|[ 	]+$/, "", $2)
+        gsub(/^[ \t]+|[ \t]+$/, "", $2)
         print $2
         exit
       }
@@ -303,24 +288,19 @@ plugin_repo_url() {
   local plugin=${1:?plugin is required}
   case "$plugin" in
     git)
-      printf '%s
-' ''
+      printf '%s\n' ''
       ;;
     zsh-autosuggestions)
-      printf '%s
-' 'https://github.com/zsh-users/zsh-autosuggestions.git'
+      printf '%s\n' 'https://github.com/zsh-users/zsh-autosuggestions.git'
       ;;
     zsh-syntax-highlighting)
-      printf '%s
-' 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
+      printf '%s\n' 'https://github.com/zsh-users/zsh-syntax-highlighting.git'
       ;;
     zsh-completions)
-      printf '%s
-' 'https://github.com/zsh-users/zsh-completions.git'
+      printf '%s\n' 'https://github.com/zsh-users/zsh-completions.git'
       ;;
     zsh-history-substring-search)
-      printf '%s
-' 'https://github.com/zsh-users/zsh-history-substring-search.git'
+      printf '%s\n' 'https://github.com/zsh-users/zsh-history-substring-search.git'
       ;;
     *)
       return 1

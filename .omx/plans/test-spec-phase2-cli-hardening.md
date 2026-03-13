@@ -11,13 +11,13 @@ Prove the rebuilt CLI core works for local/bootstrap/configure/verify/rollback b
 
 ### 2. CLI smoke checks
 - `make help`
-- `./dev-env help`
-- `./dev-env bootstrap --dry-run --no-packages --profile minimal`
-- `./dev-env packages --dry-run`
-- `./dev-env ohmyzsh --dry-run`
-- `./dev-env plugins --dry-run --profile general-dev`
-- `./dev-env configure --dry-run --profile minimal`
-- `./dev-env chsh --dry-run`
+- `./envkit help`
+- `./envkit bootstrap --dry-run --no-packages --profile minimal`
+- `./envkit packages --dry-run`
+- `./envkit ohmyzsh --dry-run`
+- `./envkit plugins --dry-run --profile general-dev`
+- `./envkit configure --dry-run --profile minimal`
+- `./envkit chsh --dry-run`
 
 ### 3. Temp-environment integration checks
 Inside a temp HOME/PATH with command shims:
@@ -34,14 +34,14 @@ Inside a temp HOME/PATH with command shims:
 
 ## Recommended Command Sequence
 ```bash
-bash -n dev-env scripts/*.sh scripts/tasks/*.sh tests/*.sh tests/smoke/*.sh
-./dev-env bootstrap --dry-run --no-packages --profile minimal
-./dev-env packages --dry-run
-./dev-env ohmyzsh --dry-run
-./dev-env plugins --dry-run --profile general-dev
-./dev-env configure --dry-run --profile minimal
-./dev-env chsh --dry-run
-./dev-env test
+bash -n envkit scripts/*.sh scripts/tasks/*.sh tests/*.sh tests/smoke/*.sh
+./envkit bootstrap --dry-run --no-packages --profile minimal
+./envkit packages --dry-run
+./envkit ohmyzsh --dry-run
+./envkit plugins --dry-run --profile general-dev
+./envkit configure --dry-run --profile minimal
+./envkit chsh --dry-run
+./envkit test
 make help
 make test
 make verify

@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-TOOLS_DIR="${DEV_ENV_TOOLS_DIR:-$ROOT_DIR/.cache/dev-env-tools/bin}"
+TOOLS_DIR="${ENVKIT_TOOLS_DIR:-$ROOT_DIR/.cache/envkit-tools/bin}"
 SHELLCHECK_VERSION="${SHELLCHECK_VERSION:-v0.11.0}"
 SHFMT_VERSION="${SHFMT_VERSION:-v3.11.0}"
 

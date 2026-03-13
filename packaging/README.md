@@ -6,4 +6,4 @@ Phase 3 adds standalone packaging and release helpers:
 - `generate-gpg-key.sh`
 - `github-secrets-apply.sh`
 
-Generated GPG material defaults to `${XDG_STATE_HOME:-$HOME/.local/state}/dev-env/gpg` rather than tracked repo output.
+Generated GPG material defaults to `${XDG_STATE_HOME:-$HOME/.local/state}/envkit/gpg` rather than tracked repo output.

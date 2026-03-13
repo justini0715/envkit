@@ -32,7 +32,7 @@ jobs:
         run: make format-check
 
       - name: CLI and integration tests
-        run: ./dev-env test
+        run: ./envkit test
 
       - name: Packaging smoke
         run: ./tests/phase3-packaging-smoke.sh

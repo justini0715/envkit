@@ -2,7 +2,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PACKAGE_NAME='dev-env'
+PACKAGE_NAME='envkit'
 PREFIX="${PREFIX:-$HOME/.local}"
 LIB_DIR=''
 BIN_DIR=''
@@ -77,7 +77,7 @@ cat > "$wrapper_tmp" << EOF_WRAPPER
 set -euo pipefail
 SCRIPT_DIR="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
 INSTALL_ROOT="\$(cd "\$SCRIPT_DIR/../lib/$PACKAGE_NAME" && pwd)"
-exec "\$INSTALL_ROOT/scripts/dev-env.sh" "\$@"
+exec "\$INSTALL_ROOT/scripts/envkit.sh" "\$@"
 EOF_WRAPPER
 run cp "$wrapper_tmp" "$BIN_DIR/$PACKAGE_NAME"
 run chmod +x "$BIN_DIR/$PACKAGE_NAME"

@@ -14,7 +14,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 # shellcheck source=../lib.sh
 source "$SCRIPT_DIR/lib.sh"
 
-profile_name="$(resolve_profile "${DEV_ENV_PROFILE:-minimal}")"
+profile_name="$(resolve_profile "${ENVKIT_PROFILE:-minimal}")"
 plugins_resolved="$(load_plugins "$PLUGINS" "$PLUGINS_FILE")"
 theme_resolved="$(resolve_theme "$DEFAULT_THEME" "$THEME_FILE")"
 has_error=0
@@ -38,7 +38,7 @@ done
 
 [ -f "$ZSH_DIR/oh-my-zsh.sh" ] || has_error=1
 [ -f "$ZSHRC" ] || has_error=1
-[ -f "$ZSH_CONF_DIR/10-dev-env-ohmyzsh.zsh" ] || has_error=1
+[ -f "$ZSH_CONF_DIR/10-envkit-ohmyzsh.zsh" ] || has_error=1
 
 if [ -f "$ZSH_DIR/oh-my-zsh.sh" ]; then
   echo 'oh-my-zsh: installed'

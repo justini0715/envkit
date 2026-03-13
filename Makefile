@@ -1,7 +1,7 @@
 SHELL := /usr/bin/env bash
 .DEFAULT_GOAL := help
 
-CLI ?= ./dev-env
+CLI ?= ./envkit
 PROFILE ?= minimal
 REQUEST_FILE ?= config/user/request.txt
 VERSION ?= 0.3.0-dev
@@ -9,7 +9,7 @@ PACKAGE_ARCH ?= all
 DEB_OUTPUT_DIR ?= $(CURDIR)/dist/deb
 APT_OUTPUT_DIR ?= $(CURDIR)/dist/apt
 APT_DISTRIBUTION ?= stable
-GPG_OUTPUT_DIR ?= $(HOME)/.local/state/dev-env/gpg
+GPG_OUTPUT_DIR ?= $(HOME)/.local/state/envkit/gpg
 GITHUB_REPO ?=
 
 .PHONY: help bootstrap packages ohmyzsh plugins configure apply-user doctor test verify smoke \
@@ -17,12 +17,12 @@ GITHUB_REPO ?=
 	lint format-check format release-preflight
 
 help:
-	@echo "dev-env — Phase 4 Hardening and Polish"
+	@echo "envkit — Phase 4 Hardening and Polish"
 	@echo
 	@echo "Core verification:"
 	@echo "  make lint"
 	@echo "  make format-check"
-	@echo "  ./dev-env test"
+	@echo "  ./envkit test"
 	@echo "  make verify"
 	@echo
 	@echo "CLI commands:"
@@ -99,7 +99,7 @@ package-deb:
 	@VERSION="$(VERSION)" PACKAGE_ARCH="$(PACKAGE_ARCH)" OUTPUT_DIR="$(DEB_OUTPUT_DIR)" ./packaging/build-deb.sh "$(VERSION)"
 
 package-apt-repo: package-deb
-	@DEB_FILE="$$(ls -1 $(DEB_OUTPUT_DIR)/dev-env_*_$(PACKAGE_ARCH).deb | tail -n 1)"; \
+	@DEB_FILE="$$(ls -1 $(DEB_OUTPUT_DIR)/envkit_*_$(PACKAGE_ARCH).deb | tail -n 1)"; \
 	GPG_KEY_ID="$(GPG_KEY_ID)" GPG_PASSPHRASE="$(GPG_PASSPHRASE)" ./packaging/build-apt-repo.sh "$$DEB_FILE" "$(APT_OUTPUT_DIR)" "$(APT_DISTRIBUTION)"
 
 package-smoke:

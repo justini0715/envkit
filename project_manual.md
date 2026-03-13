@@ -1,7 +1,7 @@
-# dev-env Autonomous Rebuild Manual for Codex / OMX
+# envkit Autonomous Rebuild Manual for Codex / OMX
 
 > 목적: 이 문서는 `/home/iostream/Desktop/dev-env`의 기존 구현을 참고해,  
-> `/home/iostream/autopilot-test`에서 **독립된 제품형 CLI 프로젝트**로 `dev-env`를 처음부터 끝까지 재구성하기 위한 실행 매뉴얼이다.  
+> `/home/iostream/envkit`에서 **독립된 제품형 CLI 프로젝트**로 `envkit`를 처음부터 끝까지 재구성하기 위한 실행 매뉴얼이다.  
 > 사람용 브레인스토밍 문서가 아니라 **Codex/OMX 실행 지침**으로 사용한다.
 
 ---
@@ -15,10 +15,10 @@
 - `/home/iostream/Desktop/dev-env`
 
 ### Target execution repository
-- `/home/iostream/autopilot-test`
+- `/home/iostream/envkit`
 
 ### Product goal
-Build a polished, releaseable CLI product named `dev-env` that can:
+Build a polished, releaseable CLI product named `envkit` that can:
 - bootstrap a Debian/Ubuntu development shell environment
 - configure zsh / oh-my-zsh / plugins / theme / user request drop-ins
 - verify and diagnose the environment
@@ -131,7 +131,7 @@ If the user instructs branch-based workflow, it is mandatory.
 The rebuilt repository should look roughly like this:
 
 ```text
-dev-env/
+envkit/
   README.md
   LICENSE
   Makefile
@@ -153,7 +153,7 @@ dev-env/
     github-secrets-apply.sh
   resources/
   scripts/
-    dev-env.sh
+    envkit.sh
     main.sh
     lib.sh
     tasks/
@@ -317,9 +317,9 @@ At minimum, the rebuild should provide and validate equivalents of:
 - `make help`
 - `make test`
 - `make verify`
-- `dev-env help`
-- `dev-env doctor`
-- `dev-env bootstrap --no-packages` or equivalent non-destructive smoke path
+- `envkit help`
+- `envkit doctor`
+- `envkit bootstrap --no-packages` or equivalent non-destructive smoke path
 - package build command
 
 ### Final release readiness evidence must include
@@ -446,10 +446,10 @@ Use this as the initial prompt in the target repo:
 Use ./project_manual.md as the execution source of truth.
 Also inspect /home/iostream/Desktop/dev-env as a brownfield reference implementation, but do not mirror it blindly.
 
-Build dev-env as a standalone product-quality CLI repository from start to finish.
+Build envkit as a standalone product-quality CLI repository from start to finish.
 
 Goals:
-- create a polished standalone repo for dev-env
+- create a polished standalone repo for envkit
 - preserve useful command flows from the old repo
 - fix product identity, packaging honesty, safety defaults, verification depth, and release quality
 - end with a releaseable CLI project with docs, tests, packaging, and GitHub Release readiness
@@ -519,7 +519,7 @@ Completion means:
 
 ## 17. Start Procedure
 
-When starting in `/home/iostream/autopilot-test`:
+When starting in `/home/iostream/envkit`:
 
 1. ensure this file is present as `project_manual.md`
 2. create a short `AGENTS.md` that points to `project_manual.md`

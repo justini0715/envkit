@@ -5,10 +5,10 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 
 VERSION_INPUT=${1:-${VERSION:-"0.1.0"}}
-PACKAGE_NAME=${PACKAGE_NAME:-"dev-env"}
+PACKAGE_NAME=${PACKAGE_NAME:-"envkit"}
 PACKAGE_ARCH=${PACKAGE_ARCH:-"all"}
 OUTPUT_DIR=${OUTPUT_DIR:-"$ROOT_DIR/dist/deb"}
-MAINTAINER=${MAINTAINER:-"dev-env maintainer <devnull@example.com>"}
+MAINTAINER=${MAINTAINER:-"envkit maintainer <devnull@example.com>"}
 PACKAGE_DEPENDS=${PACKAGE_DEPENDS:-"bash, ca-certificates, curl, git, zsh"}
 PACKAGE_RECOMMENDS=${PACKAGE_RECOMMENDS:-"build-essential"}
 PACKAGE_SUGGESTS=${PACKAGE_SUGGESTS:-"apt-utils, dpkg-dev, gnupg, gh"}
@@ -58,7 +58,7 @@ cat > "$pkg_root/usr/bin/$PACKAGE_NAME" << EOF_WRAPPER
 set -euo pipefail
 SCRIPT_DIR="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
 INSTALL_ROOT="\$(cd "\$SCRIPT_DIR/../lib/$PACKAGE_NAME" && pwd)"
-exec "\$INSTALL_ROOT/scripts/dev-env.sh" "\$@"
+exec "\$INSTALL_ROOT/scripts/envkit.sh" "\$@"
 EOF_WRAPPER
 chmod +x "$pkg_root/usr/bin/$PACKAGE_NAME"
 
@@ -73,7 +73,7 @@ chmod +x "$pkg_root/usr/bin/$PACKAGE_NAME"
   [ -n "$PACKAGE_RECOMMENDS" ] && echo "Recommends: $PACKAGE_RECOMMENDS"
   [ -n "$PACKAGE_SUGGESTS" ] && echo "Suggests: $PACKAGE_SUGGESTS"
   echo "Description: standalone Debian/Ubuntu zsh bootstrap CLI"
-  echo " Product-first release artifact for dev-env."
+  echo " Product-first release artifact for envkit."
   echo " Includes bootstrap/configure/verify/doctor/rollback helpers and"
   echo " packaging/release documentation for the standalone repository layout."
 } > "$pkg_root/DEBIAN/control"

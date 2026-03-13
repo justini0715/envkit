@@ -1,10 +1,10 @@
 Use ./project_manual.md as the execution source of truth.
 Also inspect /home/iostream/Desktop/dev-env as a brownfield reference implementation, but do not mirror it blindly.
 
-Build dev-env as a standalone product-quality CLI repository from start to finish.
+Build envkit as a standalone product-quality CLI repository from start to finish.
 
 Goals:
-- create a polished standalone repo for dev-env
+- create a polished standalone repo for envkit
 - preserve useful command flows from the old repo
 - fix product identity, packaging honesty, safety defaults, verification depth, and release quality
 - end with a releaseable CLI project with docs, tests, packaging, and GitHub Release readiness

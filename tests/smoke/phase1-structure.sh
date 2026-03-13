@@ -12,8 +12,8 @@ required_files=(
   .gitignore
   .shellcheckrc
   install.sh
-  dev-env
-  scripts/dev-env.sh
+  envkit
+  scripts/envkit.sh
   scripts/main.sh
   scripts/lib.sh
   scripts/ci/ensure-shell-tooling.sh
@@ -81,7 +81,7 @@ for path in "${required_dirs[@]}"; do
   }
 done
 
-for path in dev-env install.sh scripts/dev-env.sh scripts/main.sh scripts/lib.sh scripts/ci/ensure-shell-tooling.sh scripts/ci/lint.sh scripts/ci/format-check.sh scripts/ci/format.sh tests/phase1_smoke.sh tests/phase2_integration.sh tests/phase3-packaging-smoke.sh tests/smoke/phase1-structure.sh tests/smoke/phase2-cli-smoke.sh packaging/build-deb.sh packaging/build-apt-repo.sh packaging/generate-gpg-key.sh packaging/github-secrets-apply.sh; do
+for path in envkit install.sh scripts/envkit.sh scripts/main.sh scripts/lib.sh scripts/ci/ensure-shell-tooling.sh scripts/ci/lint.sh scripts/ci/format-check.sh scripts/ci/format.sh tests/phase1_smoke.sh tests/phase2_integration.sh tests/phase3-packaging-smoke.sh tests/smoke/phase1-structure.sh tests/smoke/phase2-cli-smoke.sh packaging/build-deb.sh packaging/build-apt-repo.sh packaging/generate-gpg-key.sh packaging/github-secrets-apply.sh; do
   [ -x "$path" ] || {
     echo "missing executable bit: $path" >&2
     exit 1

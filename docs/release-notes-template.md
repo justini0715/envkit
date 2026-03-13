@@ -1,6 +1,6 @@
 # Release Notes Template
 
-## dev-env <version>
+## envkit <version>
 
 ### Highlights
 - 
@@ -18,7 +18,7 @@
 ### Verification Evidence
 - `make lint`
 - `make format-check`
-- `./dev-env test`
+- `./envkit test`
 - `./tests/phase3-packaging-smoke.sh`
 - `make verify`
 

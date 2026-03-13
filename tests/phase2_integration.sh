@@ -29,7 +29,7 @@ EOF_SUDO
 write_shim apt-get << 'EOF_APT'
 #!/usr/bin/env bash
 set -euo pipefail
-printf 'apt-get %s\n' "$*" >>"${DEV_ENV_TEST_LOG:-/tmp/dev-env-apt.log}"
+printf 'apt-get %s\n' "$*" >>"${ENVKIT_TEST_LOG:-/tmp/envkit-apt.log}"
 EOF_APT
 
 write_shim curl << 'EOF_CURL'
@@ -106,7 +106,7 @@ EOF_GCC
 write_shim chsh << 'EOF_CHSH'
 #!/usr/bin/env bash
 set -euo pipefail
-printf 'chsh %s\n' "$*" >>"${DEV_ENV_TEST_LOG:-/tmp/dev-env-chsh.log}"
+printf 'chsh %s\n' "$*" >>"${ENVKIT_TEST_LOG:-/tmp/envkit-chsh.log}"
 EOF_CHSH
 
 assert_file_exists() {
@@ -139,7 +139,7 @@ TEST_ENV=(
   PATH="$FAKE_BIN:$PATH"
   HOME="$TEST_HOME"
   SHELL="/bin/bash"
-  DEV_ENV_TEST_LOG="$TMP_ROOT/test.log"
+  ENVKIT_TEST_LOG="$TMP_ROOT/test.log"
   ZSHRC="$TEST_HOME/.zshrc"
   ZSH_DIR="$TEST_HOME/.oh-my-zsh"
   ZSH_CONF_DIR="$TEST_HOME/.config/zsh/conf.d"
@@ -160,33 +160,33 @@ ls
 EOF_ZSHRC
 
 echo '[test] bootstrap dry-run smoke'
-env "${TEST_ENV[@]}" ./dev-env bootstrap --dry-run --no-packages --profile minimal > /dev/null
+env "${TEST_ENV[@]}" ./envkit bootstrap --dry-run --no-packages --profile minimal > /dev/null
 
 echo '[test] packages dry-run'
-packages_output="$(env "${TEST_ENV[@]}" ./dev-env packages --dry-run)"
+packages_output="$(env "${TEST_ENV[@]}" ./envkit packages --dry-run)"
 [[ "$packages_output" == *"apt-get"* ]] || {
   echo '[test] packages dry-run missing apt-get output' >&2
   exit 1
 }
 
 echo '[test] bootstrap actual on temp HOME'
-env "${TEST_ENV[@]}" ./dev-env bootstrap --no-packages --profile general-dev > /dev/null
+env "${TEST_ENV[@]}" ./envkit bootstrap --no-packages --profile general-dev > /dev/null
 
 assert_file_exists "$TEST_HOME/.oh-my-zsh/oh-my-zsh.sh"
-assert_file_exists "$TEST_HOME/.config/zsh/conf.d/10-dev-env-ohmyzsh.zsh"
+assert_file_exists "$TEST_HOME/.config/zsh/conf.d/10-envkit-ohmyzsh.zsh"
 assert_file_exists "$TEST_HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/.git/source.txt"
 assert_file_exists "$TEST_HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/.git/source.txt"
 assert_file_exists "$TEST_HOME/.oh-my-zsh/custom/plugins/zsh-completions/.git/source.txt"
 assert_not_contains "$TEST_HOME/.zshrc" '# init-zsh'
 assert_not_contains "$TEST_HOME/.zshrc" 'python3 ~/.bg.py'
 assert_not_contains "$TEST_HOME/.zshrc" 'ls'
-assert_contains "$TEST_HOME/.config/zsh/conf.d/10-dev-env-ohmyzsh.zsh" 'plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-completions)'
-assert_contains "$TEST_HOME/.config/zsh/conf.d/10-dev-env-ohmyzsh.zsh" 'ZSH_THEME="robbyrussell"'
+assert_contains "$TEST_HOME/.config/zsh/conf.d/10-envkit-ohmyzsh.zsh" 'plugins=(git zsh-autosuggestions zsh-syntax-highlighting zsh-completions)'
+assert_contains "$TEST_HOME/.config/zsh/conf.d/10-envkit-ohmyzsh.zsh" 'ZSH_THEME="robbyrussell"'
 
 echo '[test] configure idempotency'
-backup_count_before="$(find "$TEST_HOME" -maxdepth 1 -name '.zshrc.dev-env.bak.*' | wc -l | tr -d ' ')"
-env "${TEST_ENV[@]}" ./dev-env configure --profile general-dev > /dev/null
-backup_count_after="$(find "$TEST_HOME" -maxdepth 1 -name '.zshrc.dev-env.bak.*' | wc -l | tr -d ' ')"
+backup_count_before="$(find "$TEST_HOME" -maxdepth 1 -name '.zshrc.envkit.bak.*' | wc -l | tr -d ' ')"
+env "${TEST_ENV[@]}" ./envkit configure --profile general-dev > /dev/null
+backup_count_after="$(find "$TEST_HOME" -maxdepth 1 -name '.zshrc.envkit.bak.*' | wc -l | tr -d ' ')"
 if [ "$backup_count_before" != "$backup_count_after" ]; then
   echo '[test] configure idempotency failed (backup count changed).' >&2
   exit 1
@@ -205,54 +205,54 @@ env "${TEST_ENV[@]}" \
   USER_REQUEST_TEXT="$USER_REQUEST_TEXT_INPUT" \
   PLUGINS_FILE="$TMP_ROOT/plugins.txt" \
   THEME_FILE="$TMP_ROOT/theme.txt" \
-  USER_CONF_TARGET="$TEST_HOME/.config/zsh/conf.d/30-dev-env-user.zsh" \
+  USER_CONF_TARGET="$TEST_HOME/.config/zsh/conf.d/30-envkit-user.zsh" \
   "$ROOT_DIR/scripts/tasks/apply_user_request.sh" > /dev/null
 
 assert_contains "$TMP_ROOT/plugins.txt" 'git'
 assert_contains "$TMP_ROOT/plugins.txt" 'zsh-autosuggestions'
 assert_contains "$TMP_ROOT/theme.txt" 'agnoster'
-assert_contains "$TEST_HOME/.config/zsh/conf.d/30-dev-env-user.zsh" "alias ll='ls -al'"
-assert_contains "$TEST_HOME/.config/zsh/conf.d/30-dev-env-user.zsh" 'export EDITOR=vim'
+assert_contains "$TEST_HOME/.config/zsh/conf.d/30-envkit-user.zsh" "alias ll='ls -al'"
+assert_contains "$TEST_HOME/.config/zsh/conf.d/30-envkit-user.zsh" 'export EDITOR=vim'
 
 echo '[test] personal profile opt-in'
-rm -f "$TEST_HOME/.config/zsh/conf.d/30-dev-env-user.zsh"
-env "${TEST_ENV[@]}" ./dev-env configure --profile personal > /dev/null
-assert_contains "$TEST_HOME/.config/zsh/conf.d/30-dev-env-user.zsh" 'clear'
-assert_contains "$TEST_HOME/.config/zsh/conf.d/30-dev-env-user.zsh" 'python3 ~/.bg.py'
-assert_contains "$TEST_HOME/.config/zsh/conf.d/30-dev-env-user.zsh" 'ls'
+rm -f "$TEST_HOME/.config/zsh/conf.d/30-envkit-user.zsh"
+env "${TEST_ENV[@]}" ./envkit configure --profile personal > /dev/null
+assert_contains "$TEST_HOME/.config/zsh/conf.d/30-envkit-user.zsh" 'clear'
+assert_contains "$TEST_HOME/.config/zsh/conf.d/30-envkit-user.zsh" 'python3 ~/.bg.py'
+assert_contains "$TEST_HOME/.config/zsh/conf.d/30-envkit-user.zsh" 'ls'
 
 echo '[test] verify + doctor on temp HOME'
-env "${TEST_ENV[@]}" ./dev-env verify --profile general-dev > /dev/null
-env "${TEST_ENV[@]}" ./dev-env doctor --profile general-dev > /dev/null
+env "${TEST_ENV[@]}" ./envkit verify --profile general-dev > /dev/null
+env "${TEST_ENV[@]}" ./envkit doctor --profile general-dev > /dev/null
 
 echo '[test] backups list + rollback + clean'
-latest_backup="$(find "$TEST_HOME" -maxdepth 1 -name '.zshrc.dev-env.bak.*' | sort | tail -n 1)"
+latest_backup="$(find "$TEST_HOME" -maxdepth 1 -name '.zshrc.envkit.bak.*' | sort | tail -n 1)"
 [ -n "$latest_backup" ] || {
   echo '[test] expected at least one backup file' >&2
   exit 1
 }
-list_output="$(env "${TEST_ENV[@]}" ./dev-env backups-list)"
-[[ "$list_output" == *'.dev-env.bak.'* ]] || {
+list_output="$(env "${TEST_ENV[@]}" ./envkit backups-list)"
+[[ "$list_output" == *'.envkit.bak.'* ]] || {
   echo '[test] backups-list missing backup output' >&2
   exit 1
 }
 rollback_target="$TMP_ROOT/rollback-target.zshrc"
-env "${TEST_ENV[@]}" ./dev-env rollback --backup-file "$latest_backup" --target "$rollback_target" > /dev/null
+env "${TEST_ENV[@]}" ./envkit rollback --backup-file "$latest_backup" --target "$rollback_target" > /dev/null
 assert_file_exists "$rollback_target"
-clean_output="$(env "${TEST_ENV[@]}" ./dev-env clean-backups)"
+clean_output="$(env "${TEST_ENV[@]}" ./envkit clean-backups)"
 [[ "$clean_output" == *'[dry-run]'* ]] || {
   echo '[test] clean-backups dry-run output missing' >&2
   exit 1
 }
 env "${TEST_ENV[@]}" APPLY=1 "$ROOT_DIR/scripts/tasks/backups.sh" clean > /dev/null
-remaining_backups="$(find "$TEST_HOME" -maxdepth 1 -name '.zshrc.dev-env.bak.*' | wc -l | tr -d ' ')"
+remaining_backups="$(find "$TEST_HOME" -maxdepth 1 -name '.zshrc.envkit.bak.*' | wc -l | tr -d ' ')"
 [ "$remaining_backups" = '0' ] || {
   echo '[test] expected backups to be removed' >&2
   exit 1
 }
 
 echo '[test] chsh dry-run'
-chsh_output="$(env "${TEST_ENV[@]}" ./dev-env chsh --dry-run)"
+chsh_output="$(env "${TEST_ENV[@]}" ./envkit chsh --dry-run)"
 [[ "$chsh_output" == *'[dry-run]'* ]] || {
   echo '[test] chsh dry-run output missing' >&2
   exit 1
