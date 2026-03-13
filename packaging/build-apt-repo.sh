@@ -17,6 +17,69 @@ suite="${REPO_SUITE:-$distribution}"
 codename="${REPO_CODENAME:-$distribution}"
 architectures="${REPO_ARCHITECTURES:-amd64 all}"
 
+derive_repo_base_url() {
+  if [ -n "${REPO_BASE_URL:-}" ]; then
+    printf '%s\n' "$REPO_BASE_URL"
+    return 0
+  fi
+
+  if [ -n "${GITHUB_REPOSITORY:-}" ]; then
+    local owner repo
+    owner="${GITHUB_REPOSITORY%/*}"
+    repo="${GITHUB_REPOSITORY#*/}"
+    printf 'https://%s.github.io/%s\n' "$owner" "$repo"
+    return 0
+  fi
+
+  printf '%s\n' ''
+}
+
+write_index_page() {
+  local repo_root=${1:?repo_root is required}
+  local base_url distribution component
+  base_url="$(derive_repo_base_url)"
+  distribution="${2:?distribution is required}"
+  component="${3:?component is required}"
+
+  cat > "$repo_root/index.html" << EOF_INDEX
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>envkit APT Repository</title>
+    <style>
+      body { font-family: system-ui, sans-serif; max-width: 52rem; margin: 2rem auto; padding: 0 1rem; line-height: 1.5; }
+      code, pre { font-family: ui-monospace, monospace; background: #f5f5f5; }
+      code { padding: 0.15rem 0.3rem; border-radius: 0.25rem; }
+      pre { padding: 1rem; overflow-x: auto; border-radius: 0.5rem; }
+      a { color: #0b57d0; }
+    </style>
+  </head>
+  <body>
+    <h1>envkit APT Repository</h1>
+    <p>This GitHub Pages site serves the signed APT repository for <strong>envkit</strong>.</p>
+    <ul>
+      <li><a href="public.key">public.key</a></li>
+      <li><a href="dists/${distribution}/InRelease">dists/${distribution}/InRelease</a></li>
+      <li><a href="dists/${distribution}/${component}/binary-amd64/Packages">Packages</a></li>
+    </ul>
+    <h2>Install</h2>
+    <pre><code>sudo install -d -m 0755 /etc/apt/keyrings
+curl -fsSL ${base_url:-<your-pages-url>}/public.key \\
+  | gpg --dearmor \\
+  | sudo tee /etc/apt/keyrings/envkit-archive-keyring.gpg >/dev/null
+
+echo "deb [signed-by=/etc/apt/keyrings/envkit-archive-keyring.gpg] ${base_url:-<your-pages-url>} ${distribution} ${component}" \\
+  | sudo tee /etc/apt/sources.list.d/envkit.list >/dev/null
+
+sudo apt update
+sudo apt install -y envkit</code></pre>
+  </body>
+</html>
+EOF_INDEX
+}
+
 if [ ! -f "$deb_file" ]; then
   echo "deb file not found: $deb_file" >&2
   exit 1
@@ -69,6 +132,8 @@ APT::FTPArchive::Release {
 EOF_CONF
 
 apt-ftparchive -c "$release_conf" release "$repo_root/dists/$distribution" > "$repo_root/dists/$distribution/Release"
+
+write_index_page "$repo_root" "$distribution" "$component"
 
 if [ -n "${GPG_KEY_ID:-}" ]; then
   key_id="$(printf '%s' "$GPG_KEY_ID" | tr -d '\r' | awk '{print $1}')"

@@ -1,11 +1,11 @@
 # Local Setup Runbook
 
 ## Purpose
-Describe the supported standalone `envkit` workflow through Phase 4.
+Describe the supported standalone `envkit` workflow after the v0.4.0 release.
 
 ## Preconditions
-- work from `/home/iostream/envkit`
-- stay on `feat/phase4-hardening`
+- work from the `envkit` repository root
+- use a non-`main` working branch when making follow-up changes
 - treat `/home/iostream/Desktop/dev-env` as brownfield-reference input only
 
 ## Recommended Local Commands
@@ -22,6 +22,20 @@ make verify
 ## Local Install Path
 ```bash
 ./install.sh --prefix "$HOME/.local"
+```
+
+## Signed APT Install
+```bash
+sudo install -d -m 0755 /etc/apt/keyrings
+curl -fsSL https://justini0715.github.io/envkit/public.key \
+  | gpg --dearmor \
+  | sudo tee /etc/apt/keyrings/envkit-archive-keyring.gpg >/dev/null
+
+echo "deb [signed-by=/etc/apt/keyrings/envkit-archive-keyring.gpg] https://justini0715.github.io/envkit stable main" \
+  | sudo tee /etc/apt/sources.list.d/envkit.list >/dev/null
+
+sudo apt update
+sudo apt install -y envkit
 ```
 
 ## Personal Opt-In Profile
