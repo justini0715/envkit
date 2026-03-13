@@ -18,9 +18,12 @@ profile_name="$(resolve_profile "${ENVKIT_PROFILE:-minimal}")"
 plugins_resolved="$(load_plugins "$PLUGINS" "$PLUGINS_FILE")"
 theme_resolved="$(resolve_theme "$DEFAULT_THEME" "$THEME_FILE")"
 has_error=0
+compiler_cmd="$(platform_compiler_cmd)"
 
 printf 'profile: %s
 ' "$profile_name"
+printf 'platform: %s
+' "$(detect_platform)"
 printf 'theme:   %s
 ' "$theme_resolved"
 printf 'git:     %s
@@ -29,12 +32,16 @@ printf 'curl:    %s
 ' "$(curl --version 2> /dev/null | head -n 1 || echo 'not installed')"
 printf 'zsh:     %s
 ' "$(zsh --version 2> /dev/null || echo 'not installed')"
-printf 'gcc:     %s
-' "$(gcc --version 2> /dev/null | head -n 1 || echo 'not installed')"
+printf '%s: %s
+' "$compiler_cmd" "$("$compiler_cmd" --version 2> /dev/null | head -n 1 || echo 'not installed')"
 
-for cmd in git curl zsh gcc; do
+for cmd in git curl zsh "$compiler_cmd"; do
   command -v "$cmd" > /dev/null 2>&1 || has_error=1
 done
+
+if is_macos && ! command -v brew > /dev/null 2>&1; then
+  has_error=1
+fi
 
 [ -f "$ZSH_DIR/oh-my-zsh.sh" ] || has_error=1
 [ -f "$ZSHRC" ] || has_error=1
@@ -44,6 +51,14 @@ if [ -f "$ZSH_DIR/oh-my-zsh.sh" ]; then
   echo 'oh-my-zsh: installed'
 else
   echo 'oh-my-zsh: missing'
+fi
+
+if is_macos; then
+  if command -v brew > /dev/null 2>&1; then
+    echo 'package-manager: brew available'
+  else
+    echo 'package-manager: brew missing'
+  fi
 fi
 
 echo 'plugins:'

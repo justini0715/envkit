@@ -40,6 +40,16 @@ If you want your own interactive startup commands back explicitly:
 envkit configure --profile personal
 ```
 
+## macOS (Experimental)
+
+Use Homebrew for prerequisites and the local install path for the CLI itself.
+
+```bash
+brew install git curl zsh
+./install.sh --prefix "$HOME/.local"
+$HOME/.local/bin/envkit help
+```
+
 ## Local Development
 
 ```bash
