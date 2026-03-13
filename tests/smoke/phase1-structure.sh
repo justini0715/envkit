@@ -100,6 +100,6 @@ case "$branch_name" in
 esac
 
 grep -q 'Phase 4 — Hardening and Polish' docs/architecture/implementation-plan.md
-grep -q 'branch-per-phase' README.md
+grep -q 'do not develop directly on' docs/runbooks/developer-guide.md
 
 echo '[ok] structure checks passed'
