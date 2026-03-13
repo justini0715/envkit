@@ -1,33 +1,16 @@
 # envkit
 
-A standalone Debian/Ubuntu development-environment CLI rebuild.
+`envkit` is a Debian/Ubuntu shell bootstrap CLI for setting up a reproducible zsh-based development environment.
 
-This repository is rebuilt from `/home/iostream/Desktop/dev-env` as a product-first repo rather than a nested `archive/tools/dev-env` project.
+It provides:
+- package/bootstrap helpers
+- Oh My Zsh + plugin setup
+- safe zsh configuration management
+- doctor / verify / rollback flows
+- signed APT distribution via GitHub Pages
 
-## Current Release
+## Install with APT
 
-The latest released product is **envkit**.
-
-What it includes:
-- envkit CLI for bootstrap/configure/verify/doctor/rollback flows
-- signed APT repository on GitHub Pages
-- Debian package builds and local install path
-- CI verification for lint/format/test/package smoke
-- troubleshooting guidance and release-notes scaffold
-
-## Core Verification
-
-```bash
-make lint
-make format-check
-./envkit test
-./tests/phase3-packaging-smoke.sh
-make verify
-```
-
-## Install / Package Paths
-
-### Signed APT install
 ```bash
 sudo install -d -m 0755 /etc/apt/keyrings
 curl -fsSL https://justini0715.github.io/envkit/public.key \
@@ -41,76 +24,47 @@ sudo apt update
 sudo apt install -y envkit
 ```
 
-### After install
+## First Commands
+
 ```bash
 envkit help
 envkit bootstrap --no-packages --profile minimal
 envkit doctor --profile minimal
 ```
 
-If you want your personal interactive startup commands back as an explicit opt-in:
+## Personal Opt-In Profile
+
+If you want your own interactive startup commands back explicitly:
 
 ```bash
 envkit configure --profile personal
 ```
 
-### Local prefix install
+## Local Development
+
+```bash
+make lint
+make format-check
+./envkit test
+./tests/phase3-packaging-smoke.sh
+make verify
+```
+
+## Local Install Without APT
+
 ```bash
 ./install.sh --prefix "$HOME/.local"
 ```
 
-### Debian package build
-```bash
-make package-deb VERSION=0.3.0-test
-```
+## More Docs
 
-### Local package smoke
-```bash
-./tests/phase3-packaging-smoke.sh
-```
+- Maintainer workflow: `docs/runbooks/developer-guide.md`
+- Troubleshooting: `docs/runbooks/troubleshooting.md`
+- Local setup / install notes: `docs/runbooks/local-setup.md`
+- Release checklist: `docs/checklists/release-checklist.md`
+- Release notes template: `docs/release-notes-template.md`
 
-## Packaging Notes
+## Repository
 
-- package metadata declares runtime expectations more honestly than the brownfield baseline
-- generated GPG material defaults to `${XDG_STATE_HOME:-$HOME/.local/state}/envkit/gpg`
-- package smoke uses unpacked artifacts and temp prefixes instead of root installs
-- GitHub publish/auth steps remain documented but are not required for local verification
-
-## Profiles
-
-Profiles live under `config/profiles/`:
-- `minimal`
-- `general-dev`
-- `cpp-42`
-- `personal`
-
-## Repository Shape
-
-```text
-envkit/
-  AGENTS.md
-  project_manual.md
-  README.md
-  Makefile
-  install.sh
-  config/
-  docs/
-  packaging/
-  resources/
-  scripts/
-  tests/
-  .github/workflows/
-```
-
-## Local Usage Notes
-
-- `project_manual.md` is the execution source of truth.
-- `AGENTS.md` defines repo-local execution rules.
-- `docs/architecture/implementation-plan.md` is the active phase ledger.
-- Follow a branch-per-phase workflow and work only on the current non-main phase branch.
-
-For release-readiness and operations details, see:
-- `docs/runbooks/troubleshooting.md`
-- `docs/release-notes-template.md`
-- `docs/checklists/release-checklist.md`
-- `docs/runbooks/developer-guide.md`
+- GitHub: https://github.com/justini0715/envkit
+- APT repo / Pages: https://justini0715.github.io/envkit/
