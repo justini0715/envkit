@@ -51,8 +51,8 @@ while [[ $# -gt 0 ]]; do
 done
 [ -n "$output" ] || exit 1
 cat >"$output" <<'SCRIPT'
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/sh
+set -eu
 mkdir -p "$ZSH/plugins/git" "$ZSH/custom/plugins"
 printf '# fake oh-my-zsh\n' >"$ZSH/oh-my-zsh.sh"
 SCRIPT
