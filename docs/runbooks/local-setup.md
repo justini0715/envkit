@@ -38,6 +38,13 @@ sudo apt update
 sudo apt install -y envkit
 ```
 
+## After Install
+```bash
+envkit help
+envkit bootstrap --no-packages --profile minimal
+envkit doctor --profile minimal
+```
+
 ## Personal Opt-In Profile
 
 To restore your own interactive startup commands without making them global defaults:
@@ -52,3 +59,4 @@ This uses `config/user/personal-request.txt` and writes the commands into the ma
 - use `make release-preflight` for the full local gate
 - use `docs/checklists/release-checklist.md` before tagging
 - use `docs/release-notes-template.md` to draft release notes
+- use `docs/runbooks/developer-guide.md` for maintainer-focused workflow notes

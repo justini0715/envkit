@@ -6,7 +6,7 @@ This repository is rebuilt from `/home/iostream/Desktop/dev-env` as a product-fi
 
 ## Current Release
 
-The current released product is **envkit v0.4.0**.
+The latest released product is **envkit**.
 
 What it includes:
 - envkit CLI for bootstrap/configure/verify/doctor/rollback flows
@@ -39,6 +39,19 @@ echo "deb [signed-by=/etc/apt/keyrings/envkit-archive-keyring.gpg] https://justi
 
 sudo apt update
 sudo apt install -y envkit
+```
+
+### After install
+```bash
+envkit help
+envkit bootstrap --no-packages --profile minimal
+envkit doctor --profile minimal
+```
+
+If you want your personal interactive startup commands back as an explicit opt-in:
+
+```bash
+envkit configure --profile personal
 ```
 
 ### Local prefix install
@@ -100,3 +113,4 @@ For release-readiness and operations details, see:
 - `docs/runbooks/troubleshooting.md`
 - `docs/release-notes-template.md`
 - `docs/checklists/release-checklist.md`
+- `docs/runbooks/developer-guide.md`
