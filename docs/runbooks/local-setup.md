@@ -45,6 +45,20 @@ envkit bootstrap --no-packages --profile minimal
 envkit doctor --profile minimal
 ```
 
+## macOS (Experimental)
+
+Current scope:
+- package/bootstrap/configure/doctor flows work with Homebrew-based prerequisites
+- APT/.deb packaging remains Linux-only
+
+Suggested macOS bootstrap path:
+
+```bash
+brew install git curl zsh
+./install.sh --prefix "$HOME/.local"
+$HOME/.local/bin/envkit bootstrap --no-packages --profile minimal
+```
+
 ## Personal Opt-In Profile
 
 To restore your own interactive startup commands without making them global defaults:

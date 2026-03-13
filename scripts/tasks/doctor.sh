@@ -17,6 +17,7 @@ has_error=0
 profile_name="$(resolve_profile "${ENVKIT_PROFILE:-minimal}")"
 resolved_theme="$(resolve_theme 'robbyrussell' "$THEME_FILE")"
 resolved_plugins="$(load_plugins 'git' "$PLUGINS_FILE")"
+compiler_cmd="$(platform_compiler_cmd)"
 
 ok() {
   echo "OK: $*"
@@ -42,6 +43,7 @@ check_command() {
 
 echo "[doctor] phase + profile"
 echo "Phase: $(current_phase_name)"
+echo "Platform: $(detect_platform)"
 echo "Profile: $profile_name"
 echo "Resolved theme: $resolved_theme"
 echo "Resolved plugins: $resolved_plugins"
@@ -62,9 +64,23 @@ fi
 
 echo
 echo '[doctor] basic commands'
-for cmd in git curl zsh gcc awk sed grep; do
+for cmd in git curl zsh "$compiler_cmd" awk sed grep; do
   check_command "$cmd"
 done
+
+if is_macos; then
+  if command -v brew > /dev/null 2>&1; then
+    ok "package manager available: brew"
+  else
+    fail "package manager missing: brew"
+  fi
+else
+  if command -v apt-get > /dev/null 2>&1; then
+    ok "package manager available: apt-get"
+  else
+    fail "package manager missing: apt-get"
+  fi
+fi
 
 echo
 echo '[doctor] core files'

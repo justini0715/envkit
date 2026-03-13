@@ -92,3 +92,10 @@
 
 ## Project Completion Target
 - complete all phase deliverables with fresh evidence and stop only if live auth/publishing becomes required.
+
+## Post-Release Enhancements
+
+### macOS Experimental Support
+- branch: `feat/macos-experimental-support`
+- planning artifacts: `.omx/plans/prd-macos-experimental-support.md`, `.omx/plans/test-spec-macos-experimental-support.md`
+- status: in progress on this branch; adds Homebrew-aware package installation, platform-aware doctor/verify, CI macOS smoke, and docs updates while keeping Linux/APT as the stable path.

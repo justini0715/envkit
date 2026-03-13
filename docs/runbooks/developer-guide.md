@@ -27,6 +27,11 @@ envkit doctor --profile minimal
 envkit configure --profile personal
 ```
 
+## Platform Support
+- Debian/Ubuntu: stable
+- macOS: experimental (Homebrew + local install path)
+- `.deb` / APT publishing remain Linux-only
+
 ## Packaging / Release Cheat Sheet
 ```bash
 make package-deb VERSION=0.4.1-test

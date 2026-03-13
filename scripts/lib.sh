@@ -35,6 +35,60 @@ is_dry_run() {
   [[ "${ENVKIT_DRY_RUN:-0}" == "1" ]]
 }
 
+detect_platform() {
+  local raw_platform=""
+
+  if [ -n "${ENVKIT_PLATFORM_OVERRIDE:-}" ]; then
+    raw_platform="${ENVKIT_PLATFORM_OVERRIDE}"
+  else
+    raw_platform="$(uname -s 2> /dev/null || printf '%s' unknown)"
+  fi
+
+  raw_platform="$(printf '%s' "$raw_platform" | tr '[:upper:]' '[:lower:]')"
+  case "$raw_platform" in
+    darwin | macos)
+      printf '%s\n' 'macos'
+      ;;
+    linux | debian | ubuntu)
+      printf '%s\n' 'linux'
+      ;;
+    *)
+      printf '%s\n' "$raw_platform"
+      ;;
+  esac
+}
+
+is_macos() {
+  [ "$(detect_platform)" = "macos" ]
+}
+
+is_linux() {
+  [ "$(detect_platform)" = "linux" ]
+}
+
+platform_package_manager() {
+  case "$(detect_platform)" in
+    macos)
+      printf '%s\n' 'brew'
+      ;;
+    *)
+      printf '%s\n' 'apt-get'
+      ;;
+  esac
+}
+
+platform_compiler_cmd() {
+  printf '%s\n' 'cc'
+}
+
+platform_shell_tooling_note() {
+  if is_macos; then
+    printf '%s\n' 'Homebrew is recommended for installing shell tooling on macOS.'
+  else
+    printf '%s\n' 'APT-managed Debian/Ubuntu tooling is the primary supported path.'
+  fi
+}
+
 run_cmd() {
   if is_dry_run; then
     printf '[dry-run]'

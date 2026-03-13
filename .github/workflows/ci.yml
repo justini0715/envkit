@@ -36,3 +36,22 @@ jobs:
 
       - name: Packaging smoke
         run: ./tests/phase3-packaging-smoke.sh
+
+  verify-macos-experimental:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install shell tooling
+        run: ./scripts/ci/ensure-shell-tooling.sh
+
+      - name: Shell lint
+        run: make lint
+
+      - name: Shell format check
+        run: make format-check
+
+      - name: macOS experimental smoke
+        run: ./tests/macos_experimental_smoke.sh

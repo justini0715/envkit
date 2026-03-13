@@ -3,6 +3,9 @@
 ## Common Issues
 
 ### `apt-get not found`
+- On macOS this is expected. Use Homebrew instead.
+- `envkit packages` automatically switches to `brew` when macOS is detected.
+
 - Expected on non-Debian systems.
 - `envkit` targets Debian/Ubuntu for v1.
 - Use `./envkit packages --dry-run` to confirm the planned package command without mutating the host.
