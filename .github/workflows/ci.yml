@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - '**'
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install packaging dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev apt-utils xz-utils
+
+      - name: Install shell tooling
+        run: ./scripts/ci/ensure-shell-tooling.sh
+
+      - name: Shell lint
+        run: make lint
+
+      - name: Shell format check
+        run: make format-check
+
+      - name: CLI and integration tests
+        run: ./dev-env test
+
+      - name: Packaging smoke
+        run: ./tests/phase3-packaging-smoke.sh

@@ -1,0 +1,8 @@
+.omx/
+dist/
+*.deb
+*.log
+*.dev-env.bak.*
+.DS_Store
+*.swp
+.cache/

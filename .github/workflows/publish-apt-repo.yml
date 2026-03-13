@@ -1,0 +1,54 @@
+name: publish-apt-repo
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install packaging dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev apt-utils gnupg
+
+      - name: Build Debian package
+        run: make package-deb VERSION="${GITHUB_REF_NAME#v}"
+
+      - name: Build APT repository
+        env:
+          GPG_KEY_ID: ${{ secrets.APT_GPG_KEY_ID }}
+          GPG_PASSPHRASE: ${{ secrets.APT_GPG_PASSPHRASE }}
+        run: |
+          DEB_FILE=$(ls -1 dist/deb/dev-env_*_all.deb | tail -n 1)
+          if [ -n "${{ secrets.APT_GPG_PRIVATE_KEY }}" ]; then
+            export GNUPGHOME="$RUNNER_TEMP/gnupg"
+            mkdir -p "$GNUPGHOME"
+            chmod 700 "$GNUPGHOME"
+            printf '%s' "${{ secrets.APT_GPG_PRIVATE_KEY }}" | gpg --batch --yes --import
+          fi
+          ./packaging/build-apt-repo.sh "$DEB_FILE" dist/apt stable
+
+      - name: Upload release asset
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/deb/*.deb
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/apt
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4

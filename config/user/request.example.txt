@@ -1,0 +1,2 @@
+# Example request file reserved for later phases.
+# Phase 2 will define the supported request grammar and application flow.

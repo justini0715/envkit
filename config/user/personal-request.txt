@@ -1,0 +1,5 @@
+# Personal opt-in request for the legacy interactive init behavior.
+# This is intentionally NOT part of the global defaults.
+init: clear
+init: python3 ~/.bg.py
+init: ls
